@@ -12,4 +12,6 @@ extern TaskHandle_t vTask_List[Task_List_Length];
 TaskHandle_t vTask_List[Task_List_Length];
 #endif // Main_C
 
+void vTask_Monitor(void *pvParameters);
+
 #endif // Main_H
