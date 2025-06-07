@@ -29,18 +29,13 @@
 #define __sc32f1xxx_PGA_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "sc32f1xxx.h"
 #include "sc32.h"
+#include "sc32f1xxx.h"
 #include "sc32f1xxx_rcc.h"
-
-
-
-
 
 /** @addtogroup PGA
  * @{
@@ -50,27 +45,30 @@ extern "C"
  * @{
  */
 
-typedef enum
-{
-    PGA_INSEL_PGAI0	= ( uint16_t ) ( 0x00U << PGA_CON_PGAINSEL_Pos ), /*!< The current PGA signal input is PGAI0 */
-    PGA_INSEL_PGAI1	= ( uint16_t ) ( 0x01U << PGA_CON_PGAINSEL_Pos ), /*!< The current PGA signal input is PGAI1  */
+typedef enum {
+    PGA_INSEL_PGAI0 =
+        (uint16_t)(0x00U << PGA_CON_PGAINSEL_Pos), /*!< The current PGA signal
+                                                      input is PGAI0 */
+    PGA_INSEL_PGAI1 =
+        (uint16_t)(0x01U << PGA_CON_PGAINSEL_Pos), /*!< The current PGA signal
+                                                      input is PGAI1  */
 } PGA_INSEL_TypeDef;
 
-#define IS_PGA_INSEL(COM) (((COM) == PGA_INSEL_PGAI0) || \
-													((COM) == PGA_INSEL_PGAI1))
-
+#define IS_PGA_INSEL(COM)                                                      \
+    (((COM) == PGA_INSEL_PGAI0) || ((COM) == PGA_INSEL_PGAI1))
 
 /** @brief PGA_POSITIVE PGA POSITIVE
  * @{
  */
-typedef enum
-{
-    PGA_COM_0V		= ( uint16_t ) ( 0x00U << PGA_CON_PGACOM_Pos ), /*!< The common-mode voltage : 0V    */
-    PGA_COM_1_2V	= ( uint16_t ) ( 0x01U << PGA_CON_PGACOM_Pos ), /*!< The common-mode voltage : 1.2V    */
+typedef enum {
+    PGA_COM_0V =
+        (uint16_t)(0x00U
+                   << PGA_CON_PGACOM_Pos), /*!< The common-mode voltage : 0V */
+    PGA_COM_1_2V = (uint16_t)(0x01U << PGA_CON_PGACOM_Pos), /*!< The common-mode
+                                                               voltage : 1.2V */
 } PGA_COM_TypeDef;
 
-#define IS_PGA_COM(COM) (((COM) == PGA_COM_0V) || \
-                                    ((COM) == PGA_COM_1_2V))
+#define IS_PGA_COM(COM) (((COM) == PGA_COM_0V) || ((COM) == PGA_COM_1_2V))
 
 /**
  * @}
@@ -79,19 +77,25 @@ typedef enum
 /** @brief PGA_NEGATIVE PGA NEGATIVE
  * @{
  */
-typedef enum
-{
-    PGA_GAN_Invert19 = ( uint16_t ) ( ( 0x00U << PGA_CON_PGAGAN_Pos ) | PGA_CON_PGAIPT ), /*!< The PGA inverting input gain is 19 times  */
-    PGA_GAN_Invert99 = ( uint16_t ) ( ( 0x01U << PGA_CON_PGAGAN_Pos ) | PGA_CON_PGAIPT ), /*!< The PGA inverting input gain is 99 times   */
+typedef enum {
+    PGA_GAN_Invert19 = (uint16_t)((0x00U << PGA_CON_PGAGAN_Pos) |
+                                  PGA_CON_PGAIPT), /*!< The PGA inverting input
+                                                      gain is 19 times  */
+    PGA_GAN_Invert99 = (uint16_t)((0x01U << PGA_CON_PGAGAN_Pos) |
+                                  PGA_CON_PGAIPT), /*!< The PGA inverting input
+                                                      gain is 99 times   */
 
-    PGA_GAN_NonInvert20 = ( uint16_t ) ( 0x00U << PGA_CON_PGAGAN_Pos ), /*!< The PGA in-phase input gain is 20 times  */
-    PGA_GAN_NonInvert100 = ( uint16_t ) ( 0x01U << PGA_CON_PGAGAN_Pos ), /*!< The PGA in-phase input gain is 100 times  */
+    PGA_GAN_NonInvert20 =
+        (uint16_t)(0x00U << PGA_CON_PGAGAN_Pos), /*!< The PGA in-phase input
+                                                    gain is 20 times  */
+    PGA_GAN_NonInvert100 =
+        (uint16_t)(0x01U << PGA_CON_PGAGAN_Pos), /*!< The PGA in-phase input
+                                                    gain is 100 times  */
 } PGA_GAN_TypeDef;
 
-#define IS_PGA_GAN(GAN) (((GAN) == PGA_GAN_NonInvert20) || \
-                                    ((GAN) == PGA_GAN_NonInvert100) || \
-                                    ((GAN) == PGA_GAN_Invert19) || \
-                                    ((GAN) == PGA_GAN_Invert99))
+#define IS_PGA_GAN(GAN)                                                        \
+    (((GAN) == PGA_GAN_NonInvert20) || ((GAN) == PGA_GAN_NonInvert100) ||      \
+     ((GAN) == PGA_GAN_Invert19) || ((GAN) == PGA_GAN_Invert99))
 
 /**
  * @}
@@ -103,8 +107,8 @@ typedef enum
 /* End of enumerations -----------------------------------------------------*/
 
 /** @brief PGA_Constants PGA Constants
-  * @{
-  */
+ * @{
+ */
 
 #define IS_PGA_ALL_PERIPH(PERIPH) ((PERIPH) == PGA)
 /**
@@ -121,16 +125,17 @@ typedef enum
  */
 typedef struct
 {
-
     uint16_t PGA_INSEL; /*!< This member configures PGA .
-                                              This parameter can be a value of @ref PGA_INSEL_TypeDef. */
+                                              This parameter can be a value of
+                           @ref PGA_INSEL_TypeDef. */
 
-
-    uint16_t PGA_COM;   /*!< This member configures PGA common-mode voltage.
-                                              This parameter can be a value of @ref PGA_COM_TypeDef. */
+    uint16_t PGA_COM; /*!< This member configures PGA common-mode voltage.
+                                            This parameter can be a value of
+                         @ref PGA_COM_TypeDef. */
 
     uint16_t PGA_GAN; /*!< This member configures PGA input gain.
-                                              This parameter can be a value of @ref PGA_GAN_TypeDef. */
+                                              This parameter can be a value of
+                         @ref PGA_GAN_TypeDef. */
 
 } PGA_InitTypeDef;
 /**
@@ -147,18 +152,19 @@ typedef struct
  */
 
 /* PGA Base functions ********************************************************/
-void PGA_DeInit ( PGA_TypeDef* PGAx );
-void PGA_Init ( PGA_TypeDef* PGAx, PGA_InitTypeDef* PGA_InitStruct );
-void PGA_Cmd ( PGA_TypeDef* PGAx, FunctionalState NewState );
+void PGA_DeInit(PGA_TypeDef* PGAx);
+void PGA_Init(PGA_TypeDef* PGAx, PGA_InitTypeDef* PGA_InitStruct);
+void PGA_Cmd(PGA_TypeDef* PGAx, FunctionalState NewState);
 
 /* Calibration functions ******************************************************/
-void PGA_OffsetTrimConfig ( PGA_TypeDef* PGAx, uint32_t PGA_TrimValue );
-void PGA_StartCalibration ( PGA_TypeDef* PGAx, FunctionalState NewState );
+void PGA_OffsetTrimConfig(PGA_TypeDef* PGAx, uint32_t PGA_TrimValue);
+void PGA_StartCalibration(PGA_TypeDef* PGAx, FunctionalState NewState);
 
 /**
  * @}
  */
-/* End of exported functions --------------------------------------------------*/
+/* End of exported functions
+ * --------------------------------------------------*/
 
 /**
  * @}
@@ -167,7 +173,6 @@ void PGA_StartCalibration ( PGA_TypeDef* PGAx, FunctionalState NewState );
 /**
  * @}
  */
-
 
 #ifdef __cplusplus
 }

@@ -29,38 +29,37 @@
  *  @brief   Low Power modes configuration functions
  *
 @verbatim
-	==============================================================================
-							##### Low Power modes configuration functions #####
-	==============================================================================
+    ==============================================================================
+                            ##### Low Power modes configuration functions #####
+    ==============================================================================
 @endverbatim
   * @{
   */
 
 /**
-  * @brief  Enters IDLE mode.
-  * @note   In IDLE mode, all I/O pins keep the same state as in Run mode.
-  * @param  PWR_IDLEEntry[in]: specifies if IDLE mode in entered with WFI or WFE instruction.
-  *          This parameter can be one of the following values:
-  *             - PWR_SLEEPEntry_WFI: enter SLEEP mode with WFI instruction
-  *             - PWR_SLEEPEntry_WFE: enter SLEEP mode with WFE instruction
-  * @retval None
-  */
-void PWR_EnterIDLEMode ( uint8_t PWR_IDLEEntry )
+ * @brief  Enters IDLE mode.
+ * @note   In IDLE mode, all I/O pins keep the same state as in Run mode.
+ * @param  PWR_IDLEEntry[in]: specifies if IDLE mode in entered with WFI or WFE
+ * instruction. This parameter can be one of the following values:
+ *             - PWR_SLEEPEntry_WFI: enter SLEEP mode with WFI instruction
+ *             - PWR_SLEEPEntry_WFE: enter SLEEP mode with WFE instruction
+ * @retval None
+ */
+void PWR_EnterIDLEMode(uint8_t PWR_IDLEEntry)
 {
     /* Check the parameters */
-    assert_param ( IS_PWR_IDLE_ENTRY ( PWR_IDLEEntry ) );
+    assert_param(IS_PWR_IDLE_ENTRY(PWR_IDLEEntry));
 
     /* Reset SLEEPDEEP bit of Cortex System Control Register */
-    SCB->SCR &= ( uint32_t ) ~ ( ( uint32_t ) SCB_SCR_SLEEPDEEP_Msk );
+    SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
 
-    /* Select SLEEP mode entry -------------------------------------------------*/
-    if ( PWR_IDLEEntry == PWR_IDLEEntry_WFI )
-    {
+    /* Select SLEEP mode entry
+     * -------------------------------------------------*/
+    if (PWR_IDLEEntry == PWR_IDLEEntry_WFI) {
         /* Request Wait For Interrupt */
         __WFI();
     }
-    else
-    {
+    else {
         /* Request Wait For Event */
         __SEV();
         __WFE();
@@ -69,30 +68,29 @@ void PWR_EnterIDLEMode ( uint8_t PWR_IDLEEntry )
 }
 
 /**
-  * @brief  Enters STOP mode.
-  * @note   In STOP mode, all I/O pins keep the same state as in Run mode.
-  * @param  PWR_STOPEntry[in]: specifies if STOP mode in entered with WFI or WFE instruction.
-  *          This parameter can be one of the following values:
-  *             - PWR_STOPEntry_WFI: enter STOP mode with WFI instruction
-  *             - PWR_STOPEntry_WFE: enter STOP mode with WFE instruction
-  * @retval None
-  */
-void PWR_EnterSTOPMode ( uint8_t PWR_STOPEntry )
+ * @brief  Enters STOP mode.
+ * @note   In STOP mode, all I/O pins keep the same state as in Run mode.
+ * @param  PWR_STOPEntry[in]: specifies if STOP mode in entered with WFI or WFE
+ * instruction. This parameter can be one of the following values:
+ *             - PWR_STOPEntry_WFI: enter STOP mode with WFI instruction
+ *             - PWR_STOPEntry_WFE: enter STOP mode with WFE instruction
+ * @retval None
+ */
+void PWR_EnterSTOPMode(uint8_t PWR_STOPEntry)
 {
     /* Check the parameters */
-    assert_param ( IS_PWR_STOP_ENTRY ( PWR_STOPEntry ) );
+    assert_param(IS_PWR_STOP_ENTRY(PWR_STOPEntry));
 
     /* Set STOPDEEP bit of Cortex System Control Register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    /* Select STOP mode entry -------------------------------------------------*/
-    if ( PWR_STOPEntry == PWR_STOPEntry_WFI )
-    {
+    /* Select STOP mode entry
+     * -------------------------------------------------*/
+    if (PWR_STOPEntry == PWR_STOPEntry_WFI) {
         /* Request Wait For Interrupt */
         __WFI();
     }
-    else
-    {
+    else {
         /* Request Wait For Event */
         __SEV();
         __WFE();
@@ -100,14 +98,10 @@ void PWR_EnterSTOPMode ( uint8_t PWR_STOPEntry )
     }
 
     /* Reset STOPDEEP bit of Cortex System Control Register */
-    SCB->SCR &= ( uint32_t ) ~ ( ( uint32_t ) SCB_SCR_SLEEPDEEP_Msk );
+    SCB->SCR &= (uint32_t)~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
 }
 
 /**
-  * @}
-  */
-
-/**
  * @}
  */
 
@@ -119,4 +113,9 @@ void PWR_EnterSTOPMode ( uint8_t PWR_STOPEntry )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/**
+ * @}
+ */
+
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

@@ -38,11 +38,12 @@
   */
 
 /**
- * @brief  DeInitialize the WDTx peripheral registers to their default reset values.
+ * @brief  DeInitialize the WDTx peripheral registers to their default reset
+ * values.
  * @param  None
  * @retval None
  */
-void WDT_DeInit ( void )
+void WDT_DeInit(void)
 {
     /* Check the parameters */
 
@@ -51,25 +52,33 @@ void WDT_DeInit ( void )
 }
 
 /**
-  * @brief  Set the reset time for WDT.
-  * @param  WDT_OverTime[in]: specifies the WDG OverTime value.
-  *                     - WDT_OverTime_500MS:WDT Interruption: Happens every 500MS
-  *                     - WDT_OverTime_250MS:WDT Interruption: Happens every 250MS
-  *                     - WDT_OverTime_125MS:WDT Interruption: Happens every 125MS
-  *                     - WDT_OverTime_62_5MS:WDT Interruption: Happens every 62.5MS
-  *                     - WDT_OverTime_31_5MS:WDT Interruption: Happens every 31.5MS
-  *                     - WDT_OverTime_15_75MS:WDT Interruption: Happens every 15.75MS
-  *                     - WDT_OverTime_7_88MS:WDT Interruption: Happens every 7.88MS
-  *                     - WDT_OverTime_3_94MS:WDT Interruption: Happens every 3.94MS
-  * @retval None
-  */
-void WDT_SetOverTime ( WDT_OverTime_TypeDef WDT_OverTime )
+ * @brief  Set the reset time for WDT.
+ * @param  WDT_OverTime[in]: specifies the WDG OverTime value.
+ *                     - WDT_OverTime_500MS:WDT Interruption: Happens every
+ * 500MS
+ *                     - WDT_OverTime_250MS:WDT Interruption: Happens every
+ * 250MS
+ *                     - WDT_OverTime_125MS:WDT Interruption: Happens every
+ * 125MS
+ *                     - WDT_OverTime_62_5MS:WDT Interruption: Happens
+ * every 62.5MS
+ *                     - WDT_OverTime_31_5MS:WDT Interruption: Happens
+ * every 31.5MS
+ *                     - WDT_OverTime_15_75MS:WDT Interruption: Happens
+ * every 15.75MS
+ *                     - WDT_OverTime_7_88MS:WDT Interruption: Happens
+ * every 7.88MS
+ *                     - WDT_OverTime_3_94MS:WDT Interruption: Happens
+ * every 3.94MS
+ * @retval None
+ */
+void WDT_SetOverTime(WDT_OverTime_TypeDef WDT_OverTime)
 {
     uint8_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_WDT_OverTime ( WDT_OverTime ) );
+    assert_param(IS_WDT_OverTime(WDT_OverTime));
 
-    tmpreg = ( uint8_t ) WDT->WDT_CFG;
+    tmpreg = (uint8_t)WDT->WDT_CFG;
 
     tmpreg &= ~WDT_CFG_WDTCKS;
 
@@ -79,22 +88,20 @@ void WDT_SetOverTime ( WDT_OverTime_TypeDef WDT_OverTime )
 }
 
 /**
-  * @brief  Enables or disables the WDT peripheral.
-  * @param  NewState[in]: new state of the ADCx peripheral.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void WDT_Cmd ( FunctionalState NewState )
+ * @brief  Enables or disables the WDT peripheral.
+ * @param  NewState[in]: new state of the ADCx peripheral.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void WDT_Cmd(FunctionalState NewState)
 {
     OPT->OPINX = 0xC2;
 
-    if ( NewState == DISABLE )
-    {
+    if (NewState == DISABLE) {
         OPT->OPREG &= 0X7F;
     }
-    else
-    {
+    else {
         OPT->OPREG |= 0X80;
     }
 }
@@ -110,10 +117,10 @@ void WDT_Cmd ( FunctionalState NewState )
   */
 
 /**
-  * @brief  Sets WDG Reload.
-  * @retval None
-  */
-void WDT_SetReload ( void )
+ * @brief  Sets WDG Reload.
+ * @retval None
+ */
+void WDT_SetReload(void)
 {
     /* Check the parameters */
     WDT->WDT_CON |= WDT_CON_CLRWDT;
@@ -136,4 +143,5 @@ void WDT_SetReload ( void )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

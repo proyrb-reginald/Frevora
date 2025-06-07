@@ -27,13 +27,12 @@
 #define __sc32f1xxx_WDT_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "sc32f1xxx.h"
 #include "sc32.h"
+#include "sc32f1xxx.h"
 #include "sc32f1xxx_rcc.h"
 
 /** @addtogroup sc32f1xxx_StdPeriph_Driver
@@ -51,26 +50,42 @@ extern "C"
 /** @brief WDT_OverTime WDT OverTime
  * @{
  */
-typedef enum
-{
-    WDT_OverTime_500MS = ( uint8_t ) 0x00U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 500MS    */
-    WDT_OverTime_250MS = ( uint8_t ) 0x01U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 250MS   */
-    WDT_OverTime_125MS = ( uint8_t ) 0x02U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 125MS    */
-    WDT_OverTime_62_5MS = ( uint8_t ) 0x03U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 62.5MS    */
-    WDT_OverTime_31_5MS = ( uint8_t ) 0x04U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 31.5MS    */
-    WDT_OverTime_15_75MS = ( uint8_t ) 0x05U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 15.75MS    */
-    WDT_OverTime_7_88MS = ( uint8_t ) 0x06U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 7.88MS    */
-    WDT_OverTime_3_94MS = ( uint8_t ) 0x07U << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 3.94MS    */
+typedef enum {
+    WDT_OverTime_500MS =
+        (uint8_t)0x00U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 500MS    */
+    WDT_OverTime_250MS =
+        (uint8_t)0x01U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 250MS   */
+    WDT_OverTime_125MS =
+        (uint8_t)0x02U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 125MS    */
+    WDT_OverTime_62_5MS =
+        (uint8_t)0x03U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 62.5MS    */
+    WDT_OverTime_31_5MS =
+        (uint8_t)0x04U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 31.5MS    */
+    WDT_OverTime_15_75MS =
+        (uint8_t)0x05U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 15.75MS */
+    WDT_OverTime_7_88MS =
+        (uint8_t)0x06U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 7.88MS    */
+    WDT_OverTime_3_94MS =
+        (uint8_t)0x07U
+        << WDT_CFG_WDTCKS_Pos, /*!< WDT Interruption: Happens every 3.94MS    */
 } WDT_OverTime_TypeDef;
 
-#define IS_WDT_OverTime(OVERTIME) (((OVERTIME) == WDT_OverTime_500MS) || \
-                                    ((OVERTIME) == WDT_OverTime_250MS) || \
-                                    ((OVERTIME) == WDT_OverTime_125MS) || \
-                                    ((OVERTIME) == WDT_OverTime_62_5MS) || \
-                                    ((OVERTIME) == WDT_OverTime_31_5MS) || \
-                                    ((OVERTIME) == WDT_OverTime_15_75MS) || \
-                                    ((OVERTIME) == WDT_OverTime_7_88MS) || \
-                                    ((OVERTIME) == WDT_OverTime_3_94MS))
+#define IS_WDT_OverTime(OVERTIME)                                              \
+    (((OVERTIME) == WDT_OverTime_500MS) ||                                     \
+     ((OVERTIME) == WDT_OverTime_250MS) ||                                     \
+     ((OVERTIME) == WDT_OverTime_125MS) ||                                     \
+     ((OVERTIME) == WDT_OverTime_62_5MS) ||                                    \
+     ((OVERTIME) == WDT_OverTime_31_5MS) ||                                    \
+     ((OVERTIME) == WDT_OverTime_15_75MS) ||                                   \
+     ((OVERTIME) == WDT_OverTime_7_88MS) ||                                    \
+     ((OVERTIME) == WDT_OverTime_3_94MS))
 /**
  * @}
  */
@@ -85,12 +100,12 @@ typedef enum
  */
 
 /* WDT Base functions ********************************************************/
-void WDT_DeInit ( void );
-void WDT_SetOverTime ( WDT_OverTime_TypeDef WDT_OverTime );
-void WDT_Cmd ( FunctionalState NewState );
+void WDT_DeInit(void);
+void WDT_SetOverTime(WDT_OverTime_TypeDef WDT_OverTime);
+void WDT_Cmd(FunctionalState NewState);
 
 /* WDT SetReload functions  **********************************************/
-void WDT_SetReload ( void );
+void WDT_SetReload(void);
 
 /**
  * @}

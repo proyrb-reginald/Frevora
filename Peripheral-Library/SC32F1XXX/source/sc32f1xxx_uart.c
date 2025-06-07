@@ -25,7 +25,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sc32f1xxx_uart.h"
 
-/** @defgroup UART_Exported_Group1 Configuration of the UART computation unit functions
+/** @defgroup UART_Exported_Group1 Configuration of the UART computation unit
+functions
  *  @brief   Configuration of the UART computation unit functions
  *
 @verbatim
@@ -51,54 +52,48 @@ UART_TypeDef* Printf_Uart;
  *                  - UART5:UART peripheral select UART5
  * @retval None
  */
-void UART_DeInit ( UART_TypeDef* UARTx )
+void UART_DeInit(UART_TypeDef* UARTx)
 {
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
 
-    if ( UARTx == UART0 )
-    {
+    if (UARTx == UART0) {
         /* Enable UART0 reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART0, ENABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART0, ENABLE);
         /* Release UART0 from reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART0, DISABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART0, DISABLE);
     }
-    else if ( UARTx == UART1 )
-    {
+    else if (UARTx == UART1) {
         /* Enable UART1 reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART1, ENABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART1, ENABLE);
         /* Release UART1 from reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART1, DISABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART1, DISABLE);
     }
-    else if ( UARTx == UART2 )
-    {
+    else if (UARTx == UART2) {
         /* Enable UART2 reset state */
-        RCC_APB1PeriphResetCmd ( RCC_APB1Periph_UART2, ENABLE );
+        RCC_APB1PeriphResetCmd(RCC_APB1Periph_UART2, ENABLE);
         /* Release UART2 from reset state */
-        RCC_APB1PeriphResetCmd ( RCC_APB1Periph_UART2, DISABLE );
+        RCC_APB1PeriphResetCmd(RCC_APB1Periph_UART2, DISABLE);
     }
 #if !defined(SC32f15xx)
-    else if ( UARTx == UART3 )
-    {
+    else if (UARTx == UART3) {
         /* Enable UART3 reset state */
-        RCC_APB2PeriphResetCmd ( RCC_APB2Periph_UART3, ENABLE );
+        RCC_APB2PeriphResetCmd(RCC_APB2Periph_UART3, ENABLE);
         /* Release UART3 from reset state */
-        RCC_APB2PeriphResetCmd ( RCC_APB2Periph_UART3, DISABLE );
+        RCC_APB2PeriphResetCmd(RCC_APB2Periph_UART3, DISABLE);
     }
 #endif
-#if  defined(SC32f11xx) || defined(SC32f12xx)
-    if ( UARTx == UART4 )
-    {
+#if defined(SC32f11xx) || defined(SC32f12xx)
+    if (UARTx == UART4) {
         /* Enable UART0 reset state */
-        RCC_APB1PeriphResetCmd ( RCC_APB1Periph_UART4, ENABLE );
+        RCC_APB1PeriphResetCmd(RCC_APB1Periph_UART4, ENABLE);
         /* Release UART0 from reset state */
-        RCC_APB1PeriphResetCmd ( RCC_APB1Periph_UART4, DISABLE );
+        RCC_APB1PeriphResetCmd(RCC_APB1Periph_UART4, DISABLE);
     }
-    else if ( UARTx == UART5 )
-    {
+    else if (UARTx == UART5) {
         /* Enable UART5 reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART5, ENABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART5, ENABLE);
         /* Release UART5 from reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_UART5, DISABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_UART5, DISABLE);
     }
 #endif
 }
@@ -117,35 +112,34 @@ void UART_DeInit ( UART_TypeDef* UARTx )
  *                  - UART3:UART peripheral select UART3
  *                  - UART4:UART peripheral select UART4
  *                  - UART5:UART peripheral select UART5
- * @param  UART_InitStruct[out]:Pointer to structure UART_InitTypeDef, to be initialized.
+ * @param  UART_InitStruct[out]:Pointer to structure UART_InitTypeDef, to be
+ * initialized.
  * @retval None
  * @note The default SYSCLK clock source is HRC
  */
-void UART_Init ( UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct )
+void UART_Init(UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_Mode ( UART_InitStruct->UART_Mode ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_Mode(UART_InitStruct->UART_Mode));
 
     tmpreg = UARTx->UART_CON;
-    tmpreg &= ( uint32_t ) ~ ( UART_CON_SM01 | UART_CON_SM2 );
-    tmpreg |= ( uint32_t ) ( UART_InitStruct->UART_Mode );
+    tmpreg &= (uint32_t)~(UART_CON_SM01 | UART_CON_SM2);
+    tmpreg |= (uint32_t)(UART_InitStruct->UART_Mode);
     UARTx->UART_CON = tmpreg;
 
-    if ( UART_InitStruct->UART_Mode == UART_Mode_8B )
-    {
-        assert_param ( IS_UART_PRESCALER ( UART_InitStruct->UART_BaudRate ) );
+    if (UART_InitStruct->UART_Mode == UART_Mode_8B) {
+        assert_param(IS_UART_PRESCALER(UART_InitStruct->UART_BaudRate));
 
-        UARTx->UART_CON &= ~ ( uint32_t ) UART_CON_PERSCALER;
-        UARTx->UART_CON |= ( uint32_t ) UART_InitStruct->UART_BaudRate;
+        UARTx->UART_CON &= ~(uint32_t)UART_CON_PERSCALER;
+        UARTx->UART_CON |= (uint32_t)UART_InitStruct->UART_BaudRate;
     }
-    else
-    {
-        tmpreg = ( UART_InitStruct->UART_ClockFrequency / UART_InitStruct->UART_BaudRate );
-        if ( tmpreg > 65535 )
-        {
-            UARTx->UART_CON |= ( uint32_t ) UART_CON_PERSCALER;
+    else {
+        tmpreg = (UART_InitStruct->UART_ClockFrequency /
+                  UART_InitStruct->UART_BaudRate);
+        if (tmpreg > 65535) {
+            UARTx->UART_CON |= (uint32_t)UART_CON_PERSCALER;
             tmpreg = tmpreg / 16;
         }
         UARTx->UART_BAUD = tmpreg;
@@ -170,21 +164,19 @@ void UART_Init ( UART_TypeDef* UARTx, UART_InitTypeDef* UART_InitStruct )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void UART_TXCmd ( UART_TypeDef* UARTx, FunctionalState NewState )
+void UART_TXCmd(UART_TypeDef* UARTx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the UART TX Function */
         UARTx->UART_CON |= UART_CON_TXEN;
     }
-    else
-    {
+    else {
         /* Disable the UART TX Function */
-        UARTx->UART_CON &= ( uint16_t ) ~UART_CON_TXEN;
+        UARTx->UART_CON &= (uint16_t)~UART_CON_TXEN;
     }
 }
 
@@ -206,21 +198,19 @@ void UART_TXCmd ( UART_TypeDef* UARTx, FunctionalState NewState )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void UART_RXCmd ( UART_TypeDef* UARTx, FunctionalState NewState )
+void UART_RXCmd(UART_TypeDef* UARTx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the UART RX Function */
         UARTx->UART_CON |= UART_CON_RXEN;
     }
-    else
-    {
+    else {
         /* Disable the UART RX Function */
-        UARTx->UART_CON &= ( uint16_t ) ~UART_CON_RXEN;
+        UARTx->UART_CON &= (uint16_t)~UART_CON_RXEN;
     }
 }
 
@@ -255,13 +245,13 @@ void UART_RXCmd ( UART_TypeDef* UARTx, FunctionalState NewState )
  * @param  Data[in]: the data to transmit.
  * @retval None
  */
-void UART_SendData ( UART_TypeDef* UARTx, uint16_t Data )
+void UART_SendData(UART_TypeDef* UARTx, uint16_t Data)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
 
     /* Transmit Data */
-    UARTx->UART_DATA = ( Data & ( uint16_t ) 0x01FF );
+    UARTx->UART_DATA = (Data & (uint16_t)0x01FF);
 }
 
 /**
@@ -279,13 +269,13 @@ void UART_SendData ( UART_TypeDef* UARTx, uint16_t Data )
  *                  - UART5:UART peripheral select UART5
  * @retval The received data.
  */
-uint16_t UART_ReceiveData ( UART_TypeDef* UARTx )
+uint16_t UART_ReceiveData(UART_TypeDef* UARTx)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
 
     /* Receive Data */
-    return ( uint16_t ) ( UARTx->UART_DATA & ( uint16_t ) 0x01FF );
+    return (uint16_t)(UARTx->UART_DATA & (uint16_t)0x01FF);
 }
 
 /**
@@ -321,37 +311,35 @@ uint16_t UART_ReceiveData ( UART_TypeDef* UARTx )
  *                  - UART_PinRemap_A :TIM Pin Remap: Remap mode A
  * @retval None
  */
-void UART_PinRemapConfig ( UART_TypeDef* UARTx, UART_PinRemap_TypeDef UART_Remap )
+void UART_PinRemapConfig(UART_TypeDef* UARTx, UART_PinRemap_TypeDef UART_Remap)
 {
     uint32_t tmpreg;
 
     /* Check the parameters */
 #if defined(SC32f10xx)
-    if ( UARTx == UART2 )
-    {
+    if (UARTx == UART2) {
         tmpreg = UARTx->UART_CON;
 
-        tmpreg &= ( uint32_t ) ( ~UART_CON_SPOS );
+        tmpreg &= (uint32_t)(~UART_CON_SPOS);
 
         tmpreg |= UART_Remap;
 
         UARTx->UART_CON = tmpreg;
     }
 #elif defined(SC32f11xx)
-    if ( UARTx == UART2 || UARTx == UART1 || UARTx == UART5 )
-    {
+    if (UARTx == UART2 || UARTx == UART1 || UARTx == UART5) {
         tmpreg = UARTx->UART_CON;
 
-        tmpreg &= ( uint32_t ) ( ~UART_CON_SPOS );
+        tmpreg &= (uint32_t)(~UART_CON_SPOS);
 
         tmpreg |= UART_Remap;
 
         UARTx->UART_CON = tmpreg;
     }
-#elif defined(SC32f12xx) ||defined(SC32f15xx)
+#elif defined(SC32f12xx) || defined(SC32f15xx)
     tmpreg = UARTx->UART_CON;
 
-    tmpreg &= ( uint32_t ) ( ~UART_CON_SPOS );
+    tmpreg &= (uint32_t)(~UART_CON_SPOS);
 
     tmpreg |= UART_Remap;
 
@@ -387,11 +375,14 @@ void UART_PinRemapConfig ( UART_TypeDef* UARTx, UART_PinRemap_TypeDef UART_Remap
  *                  - UART3:UART peripheral select UART3
  *                  - UART4:UART peripheral select UART4
  *                  - UART5:UART peripheral select UART5
- * @param  UART_IT[in]:specifies the UART interrupts sources to be enabled or disabled.
- *                   SC32f10xx Selection range(UART_IT_EN,UART_IT_TX,UART_IT_RX)
- *                   SC32f11xx Selection range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
- *                   SC32f12xx Selection range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
- *                   SC32f15xx Selection range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
+ * @param  UART_IT[in]:specifies the UART interrupts sources to be enabled or
+ * disabled. SC32f10xx Selection range(UART_IT_EN,UART_IT_TX,UART_IT_RX)
+ *                   SC32f11xx Selection
+ * range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
+ *                   SC32f12xx Selection
+ * range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
+ *                   SC32f15xx Selection
+ * range(UART_IT_EN,UART_IT_TX,UART_IT_RX,UART_IT_BK,UART_IT_SL,UART_IT_SV)
  *                  - UART_IT_EN:UART Interrupt
  *                  - UART_IT_TX:Transmit Interrupt
  *                  - UART_IT_RX:Receive Interrupt
@@ -402,22 +393,22 @@ void UART_PinRemapConfig ( UART_TypeDef* UARTx, UART_PinRemap_TypeDef UART_Remap
  *          This parameter can be: ENABLE or DISABLE.
  * @retval None
  */
-void UART_ITConfig ( UART_TypeDef* UARTx, uint16_t UART_IT, FunctionalState NewState )
+void UART_ITConfig(UART_TypeDef*   UARTx,
+                   uint16_t        UART_IT,
+                   FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_IT ( UART_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_IT(UART_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the Interrupt sources */
         UARTx->UART_IDE |= UART_IT;
     }
-    else
-    {
+    else {
         /* Disable the Interrupt sources */
-        UARTx->UART_IDE &= ( uint16_t ) ~UART_IT;
+        UARTx->UART_IDE &= (uint16_t)~UART_IT;
     }
 }
 
@@ -436,27 +427,26 @@ void UART_ITConfig ( UART_TypeDef* UARTx, uint16_t UART_IT, FunctionalState NewS
  *                  - UART5:UART peripheral select UART5
  * @param  UART_FLAG[in]: specifies the flag to check.
  *                   SC32f10xx Selection range(UART_Flag_RX,UART_Flag_TX)
- *                   SC32f12xx Selection range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY)
- *                   SC32f15xx Selection range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY)
+ *                   SC32f12xx Selection
+ * range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY) SC32f15xx
+ * Selection range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY)
  *                  - UART_Flag_RX:Receive flag
  *                  - UART_Flag_TX:Transmit flag
  *                  - UART_Flag_BK:Break flag
  *                  - UART_Flag_SY:SYNCIE flag
  * @retval The new state of UART_FLAG (SET or RESET).
  */
-FlagStatus UART_GetFlagStatus ( UART_TypeDef* UARTx, UART_FLAG_TypeDef UART_FLAG )
+FlagStatus UART_GetFlagStatus(UART_TypeDef* UARTx, UART_FLAG_TypeDef UART_FLAG)
 {
     ITStatus bitstatus = RESET;
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_GET_UART_FLAG ( UART_FLAG ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_GET_UART_FLAG(UART_FLAG));
 
-    if ( ( UARTx->UART_STS & UART_FLAG ) != ( uint16_t ) RESET )
-    {
+    if ((UARTx->UART_STS & UART_FLAG) != (uint16_t)RESET) {
         bitstatus = SET;
     }
-    else
-    {
+    else {
         bitstatus = RESET;
     }
     return bitstatus;
@@ -477,23 +467,25 @@ FlagStatus UART_GetFlagStatus ( UART_TypeDef* UARTx, UART_FLAG_TypeDef UART_FLAG
  *                  - UART5:UART peripheral select UART5
  * @param  UART_FLAG[in]: specifies the flag bit to clear.
  *                   SC32f10xx Selection range(UART_Flag_RX,UART_Flag_TX)
- *                   SC32f11xx Selection range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY,UART_Flag_SLVYN,UART_Flag_SLVHE)
- *                   SC32f12xx Selection range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY,UART_Flag_SLVYN,UART_Flag_SLVHE)
+ *                   SC32f11xx Selection
+ * range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY,UART_Flag_SLVYN,UART_Flag_SLVHE)
+ *                   SC32f12xx Selection
+ * range(UART_Flag_RX,UART_Flag_TX,UART_Flag_BK,UART_Flag_SY,UART_Flag_SLVYN,UART_Flag_SLVHE)
  *                  - UART_Flag_RX:Receive flag
  *                  - UART_Flag_TX:Transmit flag
  *                  - UART_Flag_BK:Break flag
  *                  - UART_Flag_SY:SYNCIE flag
- *                  - UART_Flag_SLVYN: SLVYN flag 
- *                  - UART_Flag_SLVHE: SLVHE flag 
+ *                  - UART_Flag_SLVYN: SLVYN flag
+ *                  - UART_Flag_SLVHE: SLVHE flag
  * @retval None
  */
-void UART_ClearFlag ( UART_TypeDef* UARTx, uint16_t UART_FLAG )
+void UART_ClearFlag(UART_TypeDef* UARTx, uint16_t UART_FLAG)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
 
     /* Clear the flags */
-    UARTx->UART_STS = ( uint16_t ) UART_FLAG;
+    UARTx->UART_STS = (uint16_t)UART_FLAG;
 }
 
 /**
@@ -514,29 +506,28 @@ void UART_ClearFlag ( UART_TypeDef* UARTx, uint16_t UART_FLAG )
  *                  - UART_DMAReq_TX:UART DMA Request Transmit
  * @retval None
  */
-void UART_DMACmd ( UART_TypeDef* UARTx, uint16_t UART_DMAReq, FunctionalState NewState )
+void UART_DMACmd(UART_TypeDef*   UARTx,
+                 uint16_t        UART_DMAReq,
+                 FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_DMAREQ ( UART_DMAReq ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_DMAREQ(UART_DMAReq));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
-        /* Enable the DMA transfer for selected requests by setting the DMAT and/or
-           DMAR bits in the UART IDE register */
+    if (NewState != DISABLE) {
+        /* Enable the DMA transfer for selected requests by setting the DMAT
+           and/or DMAR bits in the UART IDE register */
         UARTx->UART_IDE |= UART_DMAReq;
     }
-    else
-    {
-        /* Disable the DMA transfer for selected requests by clearing the DMAT and/or
-           DMAR bits in the UART IDE register */
-        UARTx->UART_IDE &= ( uint16_t ) ~UART_DMAReq;
+    else {
+        /* Disable the DMA transfer for selected requests by clearing the DMAT
+           and/or DMAR bits in the UART IDE register */
+        UARTx->UART_IDE &= (uint16_t)~UART_DMAReq;
     }
 }
 /* End of UART_Group3.	*/
-#if defined(SC32f11xx) || defined(SC32f12xx)|| defined(SC32f15xx)
-
+#if defined(SC32f11xx) || defined(SC32f12xx) || defined(SC32f15xx)
 
 /** @defgroup UART_Group5 Interrupts, LIN functions
  *  @brief
@@ -558,18 +549,16 @@ void UART_DMACmd ( UART_TypeDef* UARTx, uint16_t UART_DMAReq, FunctionalState Ne
  * @retval None
  */
 
-
-void UART_LIN_MODE ( UART_TypeDef* UARTx, UART_LINMODE_TypeDef UART_LINMODE )
+void UART_LIN_MODE(UART_TypeDef* UARTx, UART_LINMODE_TypeDef UART_LINMODE)
 {
     uint32_t temp;
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_LINMODE ( UART_LINMODE ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_LINMODE(UART_LINMODE));
 
-    if ( UARTx == UART2 )
-    {
+    if (UARTx == UART2) {
         temp = UART2->UART_CON;
-        temp &= ~ ( UART_CON_SLVEN | UART_CON_FUNCSEL );
+        temp &= ~(UART_CON_SLVEN | UART_CON_FUNCSEL);
         temp |= UART_LINMODE;
         UART2->UART_CON = temp;
     }
@@ -583,22 +572,20 @@ void UART_LIN_MODE ( UART_TypeDef* UARTx, UART_LINMODE_TypeDef UART_LINMODE )
  *                  - UART_BKSIZE_13:UART BKSIZE 13
  * @retval None
  */
-void UART_LIN_BKSIZE ( UART_TypeDef* UARTx, UART_BKSIZE_TypeDef BKSIZE )
+void UART_LIN_BKSIZE(UART_TypeDef* UARTx, UART_BKSIZE_TypeDef BKSIZE)
 {
     uint32_t temp;
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_BKSIZE ( BKSIZE ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_BKSIZE(BKSIZE));
 
-    if ( UARTx == UART2 )
-    {
+    if (UARTx == UART2) {
         temp = UART2->UART_CON;
         temp &= ~UART_CON_BKSIZE;
         temp |= BKSIZE;
         /**/
         UART2->UART_CON = temp;
     }
-
 }
 
 /**
@@ -620,30 +607,23 @@ void UART_SendBreak()
  *
  * @retval None
  */
-void UART_LIN_SLVARENE ( UART_TypeDef* UARTx, FunctionalState NewState )
+void UART_LIN_SLVARENE(UART_TypeDef* UARTx, FunctionalState NewState)
 {
-
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
 
-    if ( UARTx == UART2 )
-    {
-        if ( NewState != DISABLE )
-        {
-            /* Enable the DMA transfer for selected requests by setting the DMAT and/or
-               DMAR bits in the UART IDE register */
+    if (UARTx == UART2) {
+        if (NewState != DISABLE) {
+            /* Enable the DMA transfer for selected requests by setting the DMAT
+               and/or DMAR bits in the UART IDE register */
             UART2->UART_CON |= UART_CON_SLVAREN;
         }
-        else
-        {
-            /* Disable the DMA transfer for selected requests by clearing the DMAT and/or
-               DMAR bits in the UART IDE register */
-            UART2->UART_CON &= ( uint16_t ) ~UART_CON_SLVAREN;
+        else {
+            /* Disable the DMA transfer for selected requests by clearing the
+               DMAT and/or DMAR bits in the UART IDE register */
+            UART2->UART_CON &= (uint16_t)~UART_CON_SLVAREN;
         }
-
-
     }
-
 }
 
 /**
@@ -655,24 +635,19 @@ void UART_LIN_SLVARENE ( UART_TypeDef* UARTx, FunctionalState NewState )
  *                  - UART_LBDL_11:UART_LBDL_11
  * @retval None
  */
-void UART_LIN_LBDL ( UART_TypeDef* UARTx, UART_LBDL_TypeDef LBDL )
+void UART_LIN_LBDL(UART_TypeDef* UARTx, UART_LBDL_TypeDef LBDL)
 {
     uint32_t temp;
     /* Check the parameters */
-    assert_param ( IS_UART_ALL_PERIPH ( UARTx ) );
-    assert_param ( IS_UART_LBDL ( LBDL ) );
+    assert_param(IS_UART_ALL_PERIPH(UARTx));
+    assert_param(IS_UART_LBDL(LBDL));
 
-    if ( UARTx == UART2 )
-    {
+    if (UARTx == UART2) {
         temp = UART2->UART_CON;
         temp &= ~UART_CON_LBDL;
         temp |= LBDL;
         UART2->UART_CON = temp;
     }
-
-
-
-
 }
 
 /**
@@ -680,15 +655,17 @@ void UART_LIN_LBDL ( UART_TypeDef* UARTx, UART_LBDL_TypeDef LBDL )
  * @param  id[in]: lin Communication ID.
  * @retval PID
  */
-uint8_t LIN_CalID ( uint8_t id )
+uint8_t LIN_CalID(uint8_t id)
 {
     uint8_t parity, p0, p1;
 
     parity = id;
-    p0 = ( BIT ( parity, 0 ) ^ BIT ( parity, 1 ) ^ BIT ( parity, 2 ) ^ BIT ( parity, 4 ) ) << 6;
-    p1 = ( ! ( BIT ( parity, 1 ) ^ BIT ( parity, 3 ) ^ BIT ( parity, 4 ) ^ BIT ( parity, 5 ) ) ) << 7;
+    p0     = (BIT(parity, 0) ^ BIT(parity, 1) ^ BIT(parity, 2) ^ BIT(parity, 4))
+         << 6;
+    p1 = (!(BIT(parity, 1) ^ BIT(parity, 3) ^ BIT(parity, 4) ^ BIT(parity, 5)))
+         << 7;
 
-    parity |= ( p0 | p1 );
+    parity |= (p0 | p1);
 
     return parity;
 }
@@ -699,22 +676,20 @@ uint8_t LIN_CalID ( uint8_t id )
  * @param  len[in]: Send data array length.
  * @retval LIN Checksum
  */
-uint8_t LINCalChecksum ( uint8_t id, uint8_t *data, uint8_t len )
+uint8_t LINCalChecksum(uint8_t id, uint8_t* data, uint8_t len)
 {
-    uint32_t sum = LIN_CalID ( id );
-    uint8_t i;
+    uint32_t sum = LIN_CalID(id);
+    uint8_t  i;
 
-    for ( i = 0; i < len; i++ )
-    {
+    for (i = 0; i < len; i++) {
         sum += data[i];
-        if ( sum & 0xFF00 )
-        {
-            sum = ( sum & 0x00FF ) + 1;
+        if (sum & 0xFF00) {
+            sum = (sum & 0x00FF) + 1;
         }
     }
 
     sum ^= 0x00FF;
-    return ( uint8_t ) sum;
+    return (uint8_t)sum;
 }
 #endif
 /**
@@ -722,22 +697,22 @@ uint8_t LINCalChecksum ( uint8_t id, uint8_t *data, uint8_t len )
  */
 /* End of UART_Group4.	*/
 #if AvoidSemiHostEable
-#include "stdio.h"/*This header file is required when using printf*/
-#ifdef __ARMCC_VERSION
-#pragma import(__use_no_semihosting)
-//±ê×¼¿âÐèÒªµÄÖ§³Öº¯Êý
+#    include "stdio.h" /*This header file is required when using printf*/
+#    ifdef __ARMCC_VERSION
+#        pragma import(__use_no_semihosting)
+// ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ö§ï¿½Öºï¿½ï¿½ï¿½
 struct __FILE
 {
     int handle;
 };
 
-FILE  __stdout;
-//¶¨Òå_sys_exit()ÒÔ±ÜÃâÊ¹ÓÃ°ëÖ÷»úÄ£Ê½
-void _sys_exit ( int x )
+FILE __stdout;
+// ï¿½ï¿½ï¿½ï¿½_sys_exit()ï¿½Ô±ï¿½ï¿½ï¿½Ê¹ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
+void _sys_exit(int x)
 {
     x = x;
 }
-#endif
+#    endif
 #endif
 
 /**
@@ -748,32 +723,31 @@ void _sys_exit ( int x )
  *                  - UART2:UART peripheral select UART2
  * @retval None
  */
-__attribute__((weak)) void Printf_UartInit ( UART_TypeDef* UARTx )
+__attribute__((weak)) void Printf_UartInit(UART_TypeDef* UARTx)
 {
-
     Printf_Uart = UARTx;
 }
 /*printf mapping function*/
-#if defined (__ARMCC_VERSION)||defined (__ICCARM__)
-__attribute__((weak)) int fputc ( int c, FILE* f )
+#if defined(__ARMCC_VERSION) || defined(__ICCARM__)
+__attribute__((weak)) int fputc(int c, FILE* f)
 {
-    UART_SendData ( Printf_Uart, ( uint8_t ) c );
-    while ( !UART_GetFlagStatus ( Printf_Uart, UART_Flag_TX ) );
-    UART_ClearFlag ( Printf_Uart, UART_Flag_TX );
+    UART_SendData(Printf_Uart, (uint8_t)c);
+    while (!UART_GetFlagStatus(Printf_Uart, UART_Flag_TX))
+        ;
+    UART_ClearFlag(Printf_Uart, UART_Flag_TX);
     return c;
 }
-#elif defined (__GNUC__)
-__attribute__((weak)) int _write(int fd, char *pbuffer, int size)
+#elif defined(__GNUC__)
+__attribute__((weak)) int _write(int fd, char* pbuffer, int size)
 {
-  for(int i = 0; i < size; i ++)
-  {
-    UART_SendData ( UART3, ( uint8_t ) (*pbuffer++) );
-    while ( !UART_GetFlagStatus ( UART3, UART_Flag_TX ) );
-    UART_ClearFlag ( UART3, UART_Flag_TX );
+    for (int i = 0; i < size; i++) {
+        UART_SendData(UART3, (uint8_t)(*pbuffer++));
+        while (!UART_GetFlagStatus(UART3, UART_Flag_TX))
+            ;
+        UART_ClearFlag(UART3, UART_Flag_TX);
+    }
 
-  }
-
-  return size;
+    return size;
 }
 
 #endif
@@ -790,4 +764,5 @@ __attribute__((weak)) int _write(int fd, char *pbuffer, int size)
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

@@ -25,9 +25,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #if !defined(SC32f15xx)
-#include "sc32f1xxx_ledpwm.h"
+#    include "sc32f1xxx_ledpwm.h"
 
-/** @defgroup LEDPWM_Exported_Functions_Group1 Configuration of the LEDPWM computation unit functions
+/** @defgroup LEDPWM_Exported_Functions_Group1 Configuration of the LEDPWM
+computation unit functions
  *  @brief   Configuration of the LEDPWM computation unit functions
  *
 @verbatim
@@ -42,80 +43,86 @@
  * @brief  DeInitializes the LEDPWM peripheral
  * @retval None
  */
-void LEDPWM_DeInit ( void )
+void LEDPWM_DeInit(void)
 {
     /* Enable LEDPWM reset state */
-    RCC_APB2PeriphResetCmd ( RCC_APB2Periph_LEDPWM, ENABLE );
+    RCC_APB2PeriphResetCmd(RCC_APB2Periph_LEDPWM, ENABLE);
     /* Disable LEDPWM reset state */
-    RCC_APB2PeriphResetCmd ( RCC_APB2Periph_LEDPWM, DISABLE );
+    RCC_APB2PeriphResetCmd(RCC_APB2Periph_LEDPWM, DISABLE);
 }
 
 /**
-  * @brief  Fills each LEDPWM_InitStruct member with its default value.
-  * @param  LEDPWM_InitStruct[out]:Pointer to structure LEDPWM_InitTypeDef, to be initialized.
-  * @retval None
-  */
-void LEDPWM_StructInit ( LEDPWM_InitTypeDef* LEDPWM_InitStruct )
+ * @brief  Fills each LEDPWM_InitStruct member with its default value.
+ * @param  LEDPWM_InitStruct[out]:Pointer to structure LEDPWM_InitTypeDef, to be
+ * initialized.
+ * @retval None
+ */
+void LEDPWM_StructInit(LEDPWM_InitTypeDef* LEDPWM_InitStruct)
 {
     /* Set the default configuration */
     LEDPWM_InitStruct->LEDPWM_AlignedMode = LEDPWM_AlignmentMode_Edge;
-    LEDPWM_InitStruct->LEDPWM_Cycle = 0x0000;
-#if defined(SC32f10xx) || defined(SC32f12xx)
+    LEDPWM_InitStruct->LEDPWM_Cycle       = 0x0000;
+#    if defined(SC32f10xx) || defined(SC32f12xx)
     LEDPWM_InitStruct->LEDPWM_LowPolarityChannl = LEDPWMChannel_Less;
-    LEDPWM_InitStruct->LEDPWM_OutputChannel = LEDPWMChannel_Less;
-#elif defined(SC32f11xx)
+    LEDPWM_InitStruct->LEDPWM_OutputChannel     = LEDPWMChannel_Less;
+#    elif defined(SC32f11xx)
     LEDPWM_InitStruct->LEDPWM_LowPolarityChannl0 = LEDPWMChannel_Less;
-    LEDPWM_InitStruct->LEDPWM_OutputChannel0 = LEDPWMChannel_Less;
+    LEDPWM_InitStruct->LEDPWM_OutputChannel0     = LEDPWMChannel_Less;
 
     LEDPWM_InitStruct->LEDPWM_LowPolarityChannl1 = LEDPWMChannel_Less;
-    LEDPWM_InitStruct->LEDPWM_OutputChannel1 = LEDPWMChannel_Less;
-#endif
+    LEDPWM_InitStruct->LEDPWM_OutputChannel1     = LEDPWMChannel_Less;
+#    endif
     LEDPWM_InitStruct->LEDPWM_Prescaler = LEDPWM_PRESCALER_DIV1;
 }
 
 /**
  * @brief  LEDPWM initialization configuration
- * @param  LEDPWM_InitStruct[out]:Pointer to structure LEDPWM_InitTypeDef, to be initialized.
+ * @param  LEDPWM_InitStruct[out]:Pointer to structure LEDPWM_InitTypeDef, to be
+ * initialized.
  * @retval None
  */
-void LEDPWM_Init ( LEDPWM_InitTypeDef* LEDPWM_InitStruct )
+void LEDPWM_Init(LEDPWM_InitTypeDef* LEDPWM_InitStruct)
 {
     uint32_t tmpreg;
 
-    /*---------------------------- LEDPWM LEDPWM_CON Configuration ------------------------*/
+    /*---------------------------- LEDPWM LEDPWM_CON Configuration
+     * ------------------------*/
     /* Get the LEDPWM LEDPWM_CON value */
     tmpreg = LEDPWM->LEDPWM_CON;
     /* Clear LEDPWMCLK, LEDPWMMD0 and LEDPWMMD1 SPR bits */
-    tmpreg &= ( uint32_t ) ~ ( LEDPWM_CON_PWMCLK | LEDPWM_CON_PWMMD0 );
+    tmpreg &= (uint32_t)~(LEDPWM_CON_PWMCLK | LEDPWM_CON_PWMMD0);
     /* Configure LEDPWM: Prescaler, AlignedMode and WorkMode */
     /* Set LEDPWMCLK bits according to Prescaler value */
     /* Set LEDPWMMD0 bit according to AlignedMode value */
     /* Set LEDPWMMD1 bit according to WorkMode value */
-    tmpreg |= ( uint32_t ) ( LEDPWM_InitStruct->LEDPWM_Prescaler | LEDPWM_InitStruct->LEDPWM_AlignedMode );
+    tmpreg |= (uint32_t)(LEDPWM_InitStruct->LEDPWM_Prescaler |
+                         LEDPWM_InitStruct->LEDPWM_AlignedMode);
 
     /* Write to LEDPWM LEDPWM_CON */
     LEDPWM->LEDPWM_CON = tmpreg;
-#if defined(SC32f10xx) || defined(SC32f12xx)
+#    if defined(SC32f10xx) || defined(SC32f12xx)
     /* Write to LEDPWM LEDPWM_CHN */
     LEDPWM->LEDPWM_CHN = LEDPWM_InitStruct->LEDPWM_OutputChannel;
 
     /* Write to LEDPWM LEDPWM_INV */
     LEDPWM->LEDPWM_INV = LEDPWM_InitStruct->LEDPWM_LowPolarityChannl;
-#elif defined(SC32f11xx)
-    if ( LEDPWM_InitStruct->LEDPWM_OutputChannel0 <= 0x80000000 || LEDPWM_InitStruct->LEDPWM_OutputChannel0 == 0xFFFFFFFF )
-    {
+#    elif defined(SC32f11xx)
+    if (LEDPWM_InitStruct->LEDPWM_OutputChannel0 <= 0x80000000 ||
+        LEDPWM_InitStruct->LEDPWM_OutputChannel0 == 0xFFFFFFFF) {
         LEDPWM->LEDPWM_CHN0 = LEDPWM_InitStruct->LEDPWM_OutputChannel0;
         /* Write to LEDPWM LEDPWM_INV */
         LEDPWM->LEDPWM_INV0 = LEDPWM_InitStruct->LEDPWM_LowPolarityChannl0;
     }
     /* Write to LEDPWM LEDPWM_CYCLE */
 
-    if ( ( LEDPWM_InitStruct->LEDPWM_OutputChannel1 & 0x0FFFFFFF ) < 0x0000004F || LEDPWM_InitStruct->LEDPWM_OutputChannel1 == 0x0000007F )
-    {
-        LEDPWM->LEDPWM_CHN1 = LEDPWM_InitStruct->LEDPWM_OutputChannel1 & 0x7FFFFFFF;
-        LEDPWM->LEDPWM_INV1 = LEDPWM_InitStruct->LEDPWM_LowPolarityChannl1 & 0x7FFFFFFF;
+    if ((LEDPWM_InitStruct->LEDPWM_OutputChannel1 & 0x0FFFFFFF) < 0x0000004F ||
+        LEDPWM_InitStruct->LEDPWM_OutputChannel1 == 0x0000007F) {
+        LEDPWM->LEDPWM_CHN1 =
+            LEDPWM_InitStruct->LEDPWM_OutputChannel1 & 0x7FFFFFFF;
+        LEDPWM->LEDPWM_INV1 =
+            LEDPWM_InitStruct->LEDPWM_LowPolarityChannl1 & 0x7FFFFFFF;
     }
-#endif
+#    endif
     /* Write to LEDPWM LEDPWM_CYCLE */
     LEDPWM->LEDPWM_CYCLE = LEDPWM_InitStruct->LEDPWM_Cycle;
 }
@@ -127,20 +134,18 @@ void LEDPWM_Init ( LEDPWM_InitTypeDef* LEDPWM_InitStruct )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void LEDPWM_Cmd ( FunctionalState NewState )
+void LEDPWM_Cmd(FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the LEDPWM Counter */
         LEDPWM->LEDPWM_CON |= LEDPWM_CON_ENPWM;
     }
-    else
-    {
+    else {
         /* Disable the LEDPWM Counter */
-        LEDPWM->LEDPWM_CON &= ( uint16_t ) ~LEDPWM_CON_ENPWM;
+        LEDPWM->LEDPWM_CON &= (uint16_t)~LEDPWM_CON_ENPWM;
     }
 }
 
@@ -158,13 +163,13 @@ void LEDPWM_Cmd ( FunctionalState NewState )
  *         - LEDPWM_PRESCALER_DIV256: Clock division: Fsource/256
  * @retval None
  */
-void LEDPWM_SetPrescaler ( LEDPWM_Prescaler_TypeDef LEDPWM_Prescaler )
+void LEDPWM_SetPrescaler(LEDPWM_Prescaler_TypeDef LEDPWM_Prescaler)
 {
     /* Check the parameters */
-    assert_param ( IS_LEDPWM_PRESCALER ( LEDPWM_Prescaler ) );
+    assert_param(IS_LEDPWM_PRESCALER(LEDPWM_Prescaler));
 
     /* Reset the CKD Bits */
-    LEDPWM->LEDPWM_CON &= ( uint16_t ) ~ ( LEDPWM_CON_PWMCLK );
+    LEDPWM->LEDPWM_CON &= (uint16_t)~(LEDPWM_CON_PWMCLK);
 
     /* Set the CKD value */
     LEDPWM->LEDPWM_CON |= LEDPWM_Prescaler;
@@ -183,19 +188,18 @@ void LEDPWM_SetPrescaler ( LEDPWM_Prescaler_TypeDef LEDPWM_Prescaler )
  *         - LEDPWM_PRESCALER_DIV128: Clock division: Fsource/128
  *         - LEDPWM_PRESCALER_DIV256: Clock division: Fsource/256
  */
-LEDPWM_Prescaler_TypeDef LEDPWM_GetPrescaler ( void )
+LEDPWM_Prescaler_TypeDef LEDPWM_GetPrescaler(void)
 {
     /* Get the CKD value */
-    return ( LEDPWM_Prescaler_TypeDef ) ( LEDPWM->LEDPWM_CON & LEDPWM_CON_PWMCLK );
+    return (LEDPWM_Prescaler_TypeDef)(LEDPWM->LEDPWM_CON & LEDPWM_CON_PWMCLK);
 }
-
 
 /**
  * @brief  Sets the LEDPWM Cycle Register value
  * @param  LEDPWM_Cycle[in]: specifies the ReloadData register new value.
  * @retval None
  */
-void LEDPWM_SetCycle ( uint8_t LEDPWM_Cycle )
+void LEDPWM_SetCycle(uint8_t LEDPWM_Cycle)
 {
     /* Set the ReloadData Register value */
     LEDPWM->LEDPWM_CYCLE = LEDPWM_Cycle;
@@ -208,15 +212,18 @@ void LEDPWM_SetCycle ( uint8_t LEDPWM_Cycle )
 uint8_t LEDPWM_GetCycle()
 {
     /* Get the period value of LEDPWM */
-    return ( uint8_t ) LEDPWM->LEDPWM_CYCLE;
+    return (uint8_t)LEDPWM->LEDPWM_CYCLE;
 }
 
 /**
  * @brief  Sets the LEDPWM Duty value.
  * @param  LEDPWM_Channel[in]: specifies the LEDPWM channel to check.
- *                SC32f10xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 - LEDPWM_Channel_31,LEDPWM_Channel_All)
- *                SC32f11xx Selection range(LEDPWMChannel_Less,LED_RAMRegister_0 - LED_RAMRegister_38,LEDPWM_Channel_32_38,LEDPWM_Channel_All)
- *                SC32f12xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 - LEDPWM_Channel_31,LEDPWM_Channel_All)
+ *                SC32f10xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0
+ * - LEDPWM_Channel_31,LEDPWM_Channel_All) SC32f11xx Selection
+ * range(LEDPWMChannel_Less,LED_RAMRegister_0 -
+ * LED_RAMRegister_38,LEDPWM_Channel_32_38,LEDPWM_Channel_All) SC32f12xx
+ * Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 -
+ * LEDPWM_Channel_31,LEDPWM_Channel_All)
  *                - LEDPWMChannel_Less : No channels are selected
  *                - LEDPWM_Channel_0:PMW output channel 0
  *                - LEDPWM_Channel_1:PMW output channel 1
@@ -262,54 +269,49 @@ uint8_t LEDPWM_GetCycle()
  * @param  LEDPWM_Duty[in]: specifies the Duty register new value.
  * @retval None
  */
-void LEDPWM_SetDuty ( LEDPWM_Channel_Typedef LEDPWM_Channel, uint8_t LEDPWM_Duty )
+void LEDPWM_SetDuty(LEDPWM_Channel_Typedef LEDPWM_Channel, uint8_t LEDPWM_Duty)
 {
-    uint8_t tmpvalue;
+    uint8_t  tmpvalue;
     uint32_t tmpchannel;
     /* Check the parameters */
-    assert_param ( IS_LEDPWM_CHANNEL ( LEDPWM_Channel ) );
-#if defined (SC32f10xx) || (SC32f12xx)
+    assert_param(IS_LEDPWM_CHANNEL(LEDPWM_Channel));
+#    if defined(SC32f10xx) || (SC32f12xx)
     tmpchannel = 1;
-    for ( tmpvalue = 0; tmpvalue < 32; tmpvalue++ )
-    {
-        if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-        {
+    for (tmpvalue = 0; tmpvalue < 32; tmpvalue++) {
+        if ((uint32_t)LEDPWM_Channel & tmpchannel) {
             LEDPWM->LEDPWM_DT[tmpvalue] = LEDPWM_Duty;
         }
         tmpchannel = tmpchannel << 1;
     }
-#elif defined (SC32f11xx)
-    if ( LEDPWM_Channel <= 0x80000000 )
-    {
-        for ( tmpvalue = 0; tmpvalue < 32; tmpvalue++ )
-        {
-            if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-            {
+#    elif defined(SC32f11xx)
+    if (LEDPWM_Channel <= 0x80000000) {
+        for (tmpvalue = 0; tmpvalue < 32; tmpvalue++) {
+            if ((uint32_t)LEDPWM_Channel & tmpchannel) {
                 LEDPWM->LEDPWM_DT[tmpvalue] = LEDPWM_Duty;
             }
             tmpchannel = tmpchannel << 1;
         }
     }
-    else
-    {
-        for ( tmpvalue = 0; tmpvalue < 7; tmpvalue++ )
-        {
-            if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-            {
+    else {
+        for (tmpvalue = 0; tmpvalue < 7; tmpvalue++) {
+            if ((uint32_t)LEDPWM_Channel & tmpchannel) {
                 LEDPWM->LEDPWM_DT[tmpvalue + 31] = LEDPWM_Duty;
             }
             tmpchannel = tmpchannel << 1;
         }
     }
-#endif
+#    endif
 }
 
 /**
  * @brief  Gets the LEDPWM Duty value.
  * @param  LEDPWM_Channel[in]:
- *                SC32f10xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 - LEDPWM_Channel_31,LEDPWM_Channel_All)
- *                SC32f11xx Selection range(LEDPWMChannel_Less,LED_RAMRegister_0 - LED_RAMRegister_38,LEDPWM_Channel_32_38,LEDPWM_Channel_All)
- *                SC32f12xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 - LEDPWM_Channel_31,LEDPWM_Channel_All)
+ *                SC32f10xx Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0
+ * - LEDPWM_Channel_31,LEDPWM_Channel_All) SC32f11xx Selection
+ * range(LEDPWMChannel_Less,LED_RAMRegister_0 -
+ * LED_RAMRegister_38,LEDPWM_Channel_32_38,LEDPWM_Channel_All) SC32f12xx
+ * Selection range(LEDPWMChannel_Less,LEDPWM_Channel_0 -
+ * LEDPWM_Channel_31,LEDPWM_Channel_All)
  *                - LEDPWMChannel_Less : No channels are selected
  *                - LEDPWM_Channel_0:PMW output channel 0
  *                - LEDPWM_Channel_1:PMW output channel 1
@@ -354,55 +356,45 @@ void LEDPWM_SetDuty ( LEDPWM_Channel_Typedef LEDPWM_Channel, uint8_t LEDPWM_Duty
  *                - LEDPWM_Channel_Al:PMW output channel ALL
  * @retval the Duty register new value.
  */
-uint8_t LEDPWM_GetDuty ( LEDPWM_Channel_Typedef LEDPWM_Channel )
+uint8_t LEDPWM_GetDuty(LEDPWM_Channel_Typedef LEDPWM_Channel)
 {
-    uint8_t tmpvalue ;
+    uint8_t  tmpvalue;
     uint32_t tmpchannel;
     /* Check the parameters */
-    assert_param ( IS_LEDPWM_CHANNEL ( LEDPWM_Channel ) );
+    assert_param(IS_LEDPWM_CHANNEL(LEDPWM_Channel));
 
     tmpchannel = 1;
-#if defined (SC32f10xx) || (SC32f12xx)
-    for ( tmpvalue = 0; tmpvalue < 32; tmpvalue++ )
-    {
-        if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-        {
-            return ( uint16_t ) ( LEDPWM->LEDPWM_DT[tmpvalue] );
+#    if defined(SC32f10xx) || (SC32f12xx)
+    for (tmpvalue = 0; tmpvalue < 32; tmpvalue++) {
+        if ((uint32_t)LEDPWM_Channel & tmpchannel) {
+            return (uint16_t)(LEDPWM->LEDPWM_DT[tmpvalue]);
         }
         tmpchannel = tmpchannel << 1;
     }
-#elif defined (SC32f11xx)
-    if ( LEDPWM_Channel <= 0x80000000 )
-    {
-        for ( tmpvalue = 0; tmpvalue < 32; tmpvalue++ )
-        {
-            if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-            {
-                return ( uint16_t ) ( LEDPWM->LEDPWM_DT[tmpvalue] );
+#    elif defined(SC32f11xx)
+    if (LEDPWM_Channel <= 0x80000000) {
+        for (tmpvalue = 0; tmpvalue < 32; tmpvalue++) {
+            if ((uint32_t)LEDPWM_Channel & tmpchannel) {
+                return (uint16_t)(LEDPWM->LEDPWM_DT[tmpvalue]);
             }
             tmpchannel = tmpchannel << 1;
         }
     }
-    else
-    {
-        for ( tmpvalue = 0; tmpvalue < 32; tmpvalue++ )
-        {
-            if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-            {
-                return ( uint16_t ) ( LEDPWM->LEDPWM_DT[tmpvalue] );
+    else {
+        for (tmpvalue = 0; tmpvalue < 32; tmpvalue++) {
+            if ((uint32_t)LEDPWM_Channel & tmpchannel) {
+                return (uint16_t)(LEDPWM->LEDPWM_DT[tmpvalue]);
             }
             tmpchannel = tmpchannel << 1;
         }
-        for ( tmpvalue = 0; tmpvalue < 7; tmpvalue++ )
-        {
-            if ( ( uint32_t ) LEDPWM_Channel & tmpchannel )
-            {
-                return ( uint16_t ) ( LEDPWM->LEDPWM_DT[tmpvalue + 31] );
+        for (tmpvalue = 0; tmpvalue < 7; tmpvalue++) {
+            if ((uint32_t)LEDPWM_Channel & tmpchannel) {
+                return (uint16_t)(LEDPWM->LEDPWM_DT[tmpvalue + 31]);
             }
             tmpchannel = tmpchannel << 1;
         }
     }
-#endif
+#    endif
     return 0;
 }
 
@@ -423,28 +415,27 @@ uint8_t LEDPWM_GetDuty ( LEDPWM_Channel_Typedef LEDPWM_Channel )
   */
 /**
  * @brief  Enables or disables the specified LEDPWM interrupts.
- * @param  LEDPWM_IT[in]: specifies the LEDPWM interrupts sources to be enabled or disabled.
+ * @param  LEDPWM_IT[in]: specifies the LEDPWM interrupts sources to be enabled
+ * or disabled.
  *                  -  LEDPWM_IT_INTEN :LEDPWM Interrupt: LEDPWM Interrupt
  * @param  NewState[in]: new state of the LEDPWM interrupts.
  *                  - DISABLE:Function disable
  *                  - ENABLE:Function enable
  * @retval None
  */
-void LEDPWM_ITConfig ( uint16_t LEDPWM_IT, FunctionalState NewState )
+void LEDPWM_ITConfig(uint16_t LEDPWM_IT, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_LEDPWM_IT ( LEDPWM_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_LEDPWM_IT(LEDPWM_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the Interrupt sources */
         LEDPWM->LEDPWM_CON |= LEDPWM_IT;
     }
-    else
-    {
+    else {
         /* Disable the Interrupt sources */
-        LEDPWM->LEDPWM_CON &= ( uint16_t ) ~LEDPWM_IT;
+        LEDPWM->LEDPWM_CON &= (uint16_t)~LEDPWM_IT;
     }
 }
 
@@ -456,18 +447,16 @@ void LEDPWM_ITConfig ( uint16_t LEDPWM_IT, FunctionalState NewState )
  *                  -  RESET:Flag reset
  *                  -  SET :Flag up
  */
-FlagStatus LEDPWM_GetFlagStatus ( uint16_t LEDPWM_FLAG )
+FlagStatus LEDPWM_GetFlagStatus(uint16_t LEDPWM_FLAG)
 {
     ITStatus bitstatus = RESET;
     /* Check the parameters */
-    assert_param ( IS_LEDPWM_FLAG ( LEDPWM_FLAG ) );
+    assert_param(IS_LEDPWM_FLAG(LEDPWM_FLAG));
 
-    if ( ( LEDPWM->LEDPWM_STS & LEDPWM_FLAG ) != ( uint16_t ) RESET )
-    {
+    if ((LEDPWM->LEDPWM_STS & LEDPWM_FLAG) != (uint16_t)RESET) {
         bitstatus = SET;
     }
-    else
-    {
+    else {
         bitstatus = RESET;
     }
     return bitstatus;
@@ -479,13 +468,13 @@ FlagStatus LEDPWM_GetFlagStatus ( uint16_t LEDPWM_FLAG )
  *                  - LEDPWM_Flag_LEDPWMIF :LEDPWM Interrupt: LEDPWM Interrupt
  * @retval None
  */
-void LEDPWM_ClearFlag ( uint16_t LEDPWM_FLAG )
+void LEDPWM_ClearFlag(uint16_t LEDPWM_FLAG)
 {
     /* Check the parameters */
-    assert_param ( IS_GET_LEDPWM_FLAG ( LEDPWM_FLAG ) );
+    assert_param(IS_GET_LEDPWM_FLAG(LEDPWM_FLAG));
 
     /* Clear the flags */
-    LEDPWM->LEDPWM_STS = ( uint16_t ) LEDPWM_FLAG;
+    LEDPWM->LEDPWM_STS = (uint16_t)LEDPWM_FLAG;
 }
 
 /**
@@ -506,4 +495,5 @@ void LEDPWM_ClearFlag ( uint16_t LEDPWM_FLAG )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

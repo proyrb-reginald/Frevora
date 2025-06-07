@@ -26,7 +26,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sc32f1xxx_btm.h"
 
-/** @defgroup BTM_Exported_Functions_Group1 Configuration of the BTM computation unit functions
+/** @defgroup BTM_Exported_Functions_Group1 Configuration of the BTM computation
+unit functions
  *  @brief   Configuration of the BTM computation unit functions
  *
 @verbatim
@@ -38,18 +39,18 @@
   */
 
 /**
- * @brief  DeInitialize the BTMx peripheral registers to their default reset values.
+ * @brief  DeInitialize the BTMx peripheral registers to their default reset
+ * values.
  * @param  BTMx[out]:
  *                  - BTM: Only BTM can be select the BTMx peripheral.
  * @retval None
  */
-void BTM_DeInit ( BTM_TypeDef* BTMx )
+void BTM_DeInit(BTM_TypeDef* BTMx)
 {
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
 
-    if ( BTMx == BTM )
-    {
+    if (BTMx == BTM) {
         /* Enable BTM0 reset state */
         BTMx->BTM_CON = 0x0000;
         BTMx->BTM_STS = 0xFFFF;
@@ -61,11 +62,15 @@ void BTM_DeInit ( BTM_TypeDef* BTMx )
  * @param  BTMx[out]:
  *                  - BTM: Only BTM can be select the BTMx peripheral.
  * @param  BTM_FreqSelect[in]:specifies the BTM Frequency Select.
- *                  - BTM_FreqSelect_15_625MS:BTM Interruption: Happens every 15.625MS
- *                  - BTM_FreqSelect_31_25MS :BTM Interruption: Happens every 31.25MS
- *                  - BTM_FreqSelect_62_5MS:BTM Interruption: Happens every 62.5MS
+ *                  - BTM_FreqSelect_15_625MS:BTM Interruption: Happens
+ * every 15.625MS
+ *                  - BTM_FreqSelect_31_25MS :BTM Interruption: Happens
+ * every 31.25MS
+ *                  - BTM_FreqSelect_62_5MS:BTM Interruption: Happens
+ * every 62.5MS
  *                  - BTM_FreqSelect_125MS:BTM Interruption: Happens every 125MS
- *                  - BTM_FreqSelect_250MS :BTM Interruption: Happens every 250MS
+ *                  - BTM_FreqSelect_250MS :BTM Interruption: Happens every
+ * 250MS
  *                  - BTM_FreqSelect_500MS:BTM Interruption: Happens every 500MS
  *                  - BTM_FreqSelect_1S :BTM Interruption: Happens every 1S
  *                  - BTM_FreqSelect_2S :BTM Interruption: Happens every 2S
@@ -75,22 +80,23 @@ void BTM_DeInit ( BTM_TypeDef* BTMx )
  *                  - BTM_FreqSelect_32S : Happens every 32S
  * @retval None
  */
-void BTM_FSConfig ( BTM_TypeDef* BTMx, BTM_FreqSelect_TypeDef BTM_FreqSelect )
+void BTM_FSConfig(BTM_TypeDef* BTMx, BTM_FreqSelect_TypeDef BTM_FreqSelect)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
-    assert_param ( IS_BTM_FREQSELECT ( BTM_FreqSelect ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
+    assert_param(IS_BTM_FREQSELECT(BTM_FreqSelect));
 
-    /*---------------------------- BTMx BTM_CON Configuration ------------------------*/
+    /*---------------------------- BTMx BTM_CON Configuration
+     * ------------------------*/
     /* Get the BTMx BTM_CON value */
     tmpreg = BTMx->BTM_CON;
     /* Clear BTMFS bits */
-    tmpreg &= ( uint32_t ) ~ BTM_CON_BTMFS ;
+    tmpreg &= (uint32_t)~BTM_CON_BTMFS;
 
     /* Configure BTMx: Freq Select */
     /* Set BTMFS bit to BTM_FreqSelect value */
-    tmpreg |= ( uint32_t ) ( BTM_FreqSelect );
+    tmpreg |= (uint32_t)(BTM_FreqSelect);
     /* Write to BTMx BTM_CON */
     BTMx->BTM_CON = tmpreg;
 }
@@ -104,21 +110,19 @@ void BTM_FSConfig ( BTM_TypeDef* BTMx, BTM_FreqSelect_TypeDef BTM_FreqSelect )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void BTM_Cmd ( BTM_TypeDef* BTMx, FunctionalState NewState )
+void BTM_Cmd(BTM_TypeDef* BTMx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the BTM Function */
         BTMx->BTM_CON |= BTM_CON_BTMEN;
     }
-    else
-    {
+    else {
         /* Disable the BTM Function */
-        BTMx->BTM_CON &= ( uint16_t ) ~BTM_CON_BTMEN;
+        BTMx->BTM_CON &= (uint16_t)~BTM_CON_BTMEN;
     }
 }
 
@@ -137,29 +141,28 @@ void BTM_Cmd ( BTM_TypeDef* BTMx, FunctionalState NewState )
  * @brief  Enables or disables the specified BTM interrupts.
  * @param  BTMx[out]:
  *                  - BTM: Only BTM can be select the BTMx peripheral.
- * @param  BTM_IT[in]: specifies the BTM interrupts sources to be enabled or disabled.
+ * @param  BTM_IT[in]: specifies the BTM interrupts sources to be enabled or
+ * disabled.
  *                  - BTM_IT_INT : BTM Interrupt
  * @param  NewState[in]: new state of the BTM interrupts.
  *                  - DISABLE:Function disable
  *                  - ENABLE:Function enable
  * @retval None
  */
-void BTM_ITConfig ( BTM_TypeDef* BTMx, uint16_t BTM_IT, FunctionalState NewState )
+void BTM_ITConfig(BTM_TypeDef* BTMx, uint16_t BTM_IT, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
-    assert_param ( IS_BTM_IT ( BTM_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
+    assert_param(IS_BTM_IT(BTM_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the Interrupt sources */
         BTMx->BTM_CON |= BTM_IT;
     }
-    else
-    {
+    else {
         /* Disable the Interrupt sources */
-        BTMx->BTM_CON &= ( uint16_t ) ~BTM_IT;
+        BTMx->BTM_CON &= (uint16_t)~BTM_IT;
     }
 }
 
@@ -173,19 +176,17 @@ void BTM_ITConfig ( BTM_TypeDef* BTMx, uint16_t BTM_IT, FunctionalState NewState
  *          -  RESET:Flag reset
  *          -  SET :Flag up
  */
-FlagStatus BTM_GetFlagStatus ( BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG )
+FlagStatus BTM_GetFlagStatus(BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG)
 {
     ITStatus bitstatus = RESET;
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
-    assert_param ( IS_GET_BTM_FLAG ( BTM_FLAG ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
+    assert_param(IS_GET_BTM_FLAG(BTM_FLAG));
 
-    if ( ( BTMx->BTM_STS & BTM_FLAG ) != ( uint16_t ) RESET )
-    {
+    if ((BTMx->BTM_STS & BTM_FLAG) != (uint16_t)RESET) {
         bitstatus = SET;
     }
-    else
-    {
+    else {
         bitstatus = RESET;
     }
     return bitstatus;
@@ -199,14 +200,14 @@ FlagStatus BTM_GetFlagStatus ( BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG )
  *                  - BTM_FLAG_IF :Interrupt flag
  * @retval None
  */
-void BTM_ClearFlag ( BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG )
+void BTM_ClearFlag(BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG)
 {
     /* Check the parameters */
-    assert_param ( IS_BTM_ALL_PERIPH ( BTMx ) );
-    assert_param ( IS_BTM_FLAG ( BTM_FLAG ) );
+    assert_param(IS_BTM_ALL_PERIPH(BTMx));
+    assert_param(IS_BTM_FLAG(BTM_FLAG));
 
     /* Clear the flags */
-    BTMx->BTM_STS = ( uint16_t ) BTM_FLAG;
+    BTMx->BTM_STS = (uint16_t)BTM_FLAG;
 }
 
 /**
@@ -226,4 +227,5 @@ void BTM_ClearFlag ( BTM_TypeDef* BTMx, BTM_FLAG_TypeDef BTM_FLAG )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

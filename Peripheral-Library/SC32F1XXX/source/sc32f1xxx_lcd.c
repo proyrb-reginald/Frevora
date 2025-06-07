@@ -25,7 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #if !defined(SC32f15xx)
-#include "sc32f1xxx_lcd.h"
+#    include "sc32f1xxx_lcd.h"
 
 /** @defgroup LCD_Group1 Initialization and Configuration functions
  *  @brief Initialization and Configuration functions
@@ -42,89 +42,96 @@
  * @brief  DeInitializes the LCD_LED peripheral
  * @retval None
  */
-void LCD_DeInit ( void )
+void LCD_DeInit(void)
 {
     /* Enable LCD reset state */
-    RCC_APB2PeriphResetCmd ( RCC_APB2Periph_LCD_LED, ENABLE );
+    RCC_APB2PeriphResetCmd(RCC_APB2Periph_LCD_LED, ENABLE);
     /* Disable LCD reset state */
-    RCC_APB2PeriphResetCmd ( RCC_APB2Periph_LCD_LED, DISABLE );
+    RCC_APB2PeriphResetCmd(RCC_APB2Periph_LCD_LED, DISABLE);
 }
 
 /**
- * @brief  Initializes the peripheral LCD register according to the parameters specified in LCD_InitStruct.
- * @param  LCD_InitStruct[out]: Pointer to structure LCD_InitTypeDef, to be initialized.
+ * @brief  Initializes the peripheral LCD register according to the parameters
+ * specified in LCD_InitStruct.
+ * @param  LCD_InitStruct[out]: Pointer to structure LCD_InitTypeDef, to be
+ * initialized.
  * @retval None
  */
-void LCD_Init ( LCD_InitTypeDef* LCD_InitStruct )
+void LCD_Init(LCD_InitTypeDef* LCD_InitStruct)
 {
     uint32_t tmpreg;
 
     /* Check the parameters */
-    assert_param ( IS_LCD_FRAMEFRE ( LCD_InitStruct->LCD_FrameFre ) );
-    assert_param ( IS_LCD_DUTY ( LCD_InitStruct->LCD_Duty ) );
+    assert_param(IS_LCD_FRAMEFRE(LCD_InitStruct->LCD_FrameFre));
+    assert_param(IS_LCD_DUTY(LCD_InitStruct->LCD_Duty));
 
-    /*---------------------------- LCD_LEDx DDR_CON Configuration ------------------------*/
+    /*---------------------------- LCD_LEDx DDR_CON Configuration
+     * ------------------------*/
     /* Get the LCD_LEDx DDR_CON value */
     tmpreg = LCD_LED->DDR_CON;
 
     /* Clear DMOD,BIAS,VOIRSIF,TYPE,DDRCK and TRIMODE bits */
-    tmpreg &= ( uint32_t ) ~ ( DDR_CON_DMOD | DDR_CON_TYPE | DDR_CON_DDRCK | DDR_CON_TRIMODE );
+    tmpreg &= (uint32_t)~(DDR_CON_DMOD | DDR_CON_TYPE | DDR_CON_DDRCK |
+                          DDR_CON_TRIMODE);
 
     /* Configure LCD_LEDx: */
     /* Set DMOD bit to LCD_LED_MOD value */
     /* Set DDRCK,TRIMODE and TRIMODE bit to LCD_LED_FrameFre value */
     /* Set BIAS bit to LED_BiasVoltage value */
     /* Set VOIRSF bit to LED_VOIRSIF value */
-    tmpreg |= ( uint32_t ) ( LCD_InitStruct->LCD_FrameFre |
-                             LCD_InitStruct->LCD_Bias | LCD_InitStruct->LCD_VOIRSIF );
+    tmpreg |=
+        (uint32_t)(LCD_InitStruct->LCD_FrameFre | LCD_InitStruct->LCD_Bias |
+                   LCD_InitStruct->LCD_VOIRSIF);
 
     /* Write to LCD_LEDx DDR_CON */
     LCD_LED->DDR_CON = tmpreg;
 
-    /*---------------------------- LCD_LEDx DDR_CFG Configuration ------------------------*/
+    /*---------------------------- LCD_LEDx DDR_CFG Configuration
+     * ------------------------*/
     /* Get the LCD_LEDx DDR_CFG value */
     tmpreg = LCD_LED->DDR_CFG;
 
     /* Clear DUTY,VOIRS and SCS bits */
-    tmpreg &= ( uint32_t ) ~ ( DDR_CFG_DMOD | DDR_CFG_DUTY  | DDR_CFG_SCS );
+    tmpreg &= (uint32_t)~(DDR_CFG_DMOD | DDR_CFG_DUTY | DDR_CFG_SCS);
 
     /* Configure LCD_LEDx: */
     /* Set DUTY bits to LCD_MOD value */
     /* Set VOIRS bits to LCD_ResSel value */
     /* Set SCS bits to LCD_Voltage value */
-    tmpreg |= ( uint32_t ) ( LCD_InitStruct->LCD_ResSel |
-                             LCD_InitStruct->LCD_Duty | ( LCD_InitStruct->LCD_Voltage << DDR_CFG_VLCD_Pos ) );
+    tmpreg |= (uint32_t)(LCD_InitStruct->LCD_ResSel | LCD_InitStruct->LCD_Duty |
+                         (LCD_InitStruct->LCD_Voltage << DDR_CFG_VLCD_Pos));
 
     /* Write to LCD_LEDx DDR_CON */
     LCD_LED->DDR_CFG = tmpreg;
 
     /* Write to LCD_LEDx SEG_EN */
-#if defined(SC32f10xx) || defined(SC32f12xx)
+#    if defined(SC32f10xx) || defined(SC32f12xx)
     LCD_LED->SEG_EN = LCD_InitStruct->LCD_SegPin;
-#elif defined(SC32f11xx)
-    LCD_LED->SEG_EN0 = ( uint32_t ) LCD_InitStruct->LCD_SegPin;
-    LCD_LED->SEG_EN1 = ( uint32_t ) ( LCD_InitStruct->LCD_SegPin >> 32 );
-#endif
+#    elif defined(SC32f11xx)
+    LCD_LED->SEG_EN0 = (uint32_t)LCD_InitStruct->LCD_SegPin;
+    LCD_LED->SEG_EN1 = (uint32_t)(LCD_InitStruct->LCD_SegPin >> 32);
+#    endif
     /* Write to LCD_LEDx COM_EN */
     LCD_LED->COM_EN = LCD_InitStruct->LCD_ComPin;
 }
 
 /**
-  * @brief  Fills each LCD_InitTypeDef member with its default value.
-  * @param  LCD_InitStruct[out]: Pointer to structure LCD_InitTypeDef, to be initialized.
-  * @retval None
-  */
-void LCD_StructInit ( LCD_InitTypeDef* LCD_InitStruct )
+ * @brief  Fills each LCD_InitTypeDef member with its default value.
+ * @param  LCD_InitStruct[out]: Pointer to structure LCD_InitTypeDef, to be
+ * initialized.
+ * @retval None
+ */
+void LCD_StructInit(LCD_InitTypeDef* LCD_InitStruct)
 {
     /* Set the default configuration */
-    LCD_InitStruct->LCD_Bias = LCD_Bias_1_4;
-    LCD_InitStruct->LCD_ComPin = LCD_Channel_Less;
-    LCD_InitStruct->LCD_Duty = LCD_Duty_1_8;
+    LCD_InitStruct->LCD_Bias     = LCD_Bias_1_4;
+    LCD_InitStruct->LCD_ComPin   = LCD_Channel_Less;
+    LCD_InitStruct->LCD_Duty     = LCD_Duty_1_8;
     LCD_InitStruct->LCD_FrameFre = LCD_FrameFre_B64Hz;
-    LCD_InitStruct->LCD_ResSel = LCD_ResSel_33K;
-    LCD_InitStruct->LCD_SegPin =  LCD_Channel_Less;
-    LCD_InitStruct->LCD_VOIRSIF = LCD_VOIRSIF_Disable;
-    LCD_InitStruct->LCD_Voltage = 0;
+    LCD_InitStruct->LCD_ResSel   = LCD_ResSel_33K;
+    LCD_InitStruct->LCD_SegPin   = LCD_Channel_Less;
+    LCD_InitStruct->LCD_VOIRSIF  = LCD_VOIRSIF_Disable;
+    LCD_InitStruct->LCD_Voltage  = 0;
 }
 
 /**
@@ -134,23 +141,20 @@ void LCD_StructInit ( LCD_InitTypeDef* LCD_InitStruct )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void LCD_Cmd ( FunctionalState NewState )
+void LCD_Cmd(FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the LCD_LED Counter */
         LCD_LED->DDR_CON |= DDR_CON_DDRON;
     }
-    else
-    {
+    else {
         /* Disable the LCD_LED Counter */
-        LCD_LED->DDR_CON &= ( uint16_t ) ~DDR_CON_DDRON;
+        LCD_LED->DDR_CON &= (uint16_t)~DDR_CON_DDRON;
     }
 }
-
 
 /**
  * @}
@@ -176,16 +180,14 @@ void LCD_Cmd ( FunctionalState NewState )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void LCD_COMConfig ( LCD_COMEN_Typedef COMSelect, FunctionalState NewState )
+void LCD_COMConfig(LCD_COMEN_Typedef COMSelect, FunctionalState NewState)
 {
     uint32_t temp;
     temp = LCD_LED->COM_EN;
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         temp |= COMSelect;
     }
-    else
-    {
+    else {
         temp &= ~COMSelect;
     }
     LCD_LED->COM_EN = temp;
@@ -229,45 +231,42 @@ void LCD_COMConfig ( LCD_COMEN_Typedef COMSelect, FunctionalState NewState )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void LCD_SEGConfig ( uint64_t SEGSelect, FunctionalState NewState )
+void LCD_SEGConfig(uint64_t SEGSelect, FunctionalState NewState)
 {
-#if  defined(SC32f10xx) || defined(SC32f12xx)
+#    if defined(SC32f10xx) || defined(SC32f12xx)
     uint32_t temp;
     temp = LCD_LED->SEG_EN;
-    if ( NewState == ENABLE )
-    {
+    if (NewState == ENABLE) {
         temp |= SEGSelect;
     }
-    else
-    {
+    else {
         temp &= ~SEGSelect;
     }
     LCD_LED->SEG_EN = SEGSelect;
-#elif defined(SC32f11xx)
+#    elif defined(SC32f11xx)
     uint32_t temp0;
     uint32_t temp1;
     temp0 = LCD_LED->SEG_EN0;
     temp1 = LCD_LED->SEG_EN1;
-    if ( NewState == ENABLE )
-    {
+    if (NewState == ENABLE) {
         temp0 |= SEGSelect;
         temp1 |= SEGSelect >> 32;
     }
-    else
-    {
+    else {
         temp0 &= ~SEGSelect;
-        temp1 &= ~ ( SEGSelect >> 32 );
+        temp1 &= ~(SEGSelect >> 32);
     }
-    LCD_LED->SEG_EN0 = ( uint32_t ) temp0;
-    LCD_LED->SEG_EN1 = ( uint32_t ) temp1;
-#endif
+    LCD_LED->SEG_EN0 = (uint32_t)temp0;
+    LCD_LED->SEG_EN1 = (uint32_t)temp1;
+#    endif
 }
 /**
  * @brief  Writes data to SEG RAM.
  * @param  LCD_RAMRegister[in]:LCD RAM register selection.
- *                  SC32f10xx Selection range(LCD_RAMRegister_0 - LCD_RAMRegister_27)
- *                  SC32f11xx Selection range(LCD_RAMRegister_0 - LCD_RAMRegister_34)
- *                  SC32f12xx Selection range(LCD_RAMRegister_0 - LCD_RAMRegister_27)
+ *                  SC32f10xx Selection range(LCD_RAMRegister_0 -
+ * LCD_RAMRegister_27) SC32f11xx Selection range(LCD_RAMRegister_0 -
+ * LCD_RAMRegister_34) SC32f12xx Selection range(LCD_RAMRegister_0 -
+ * LCD_RAMRegister_27)
  *                   - LCD_RAMRegister_0:select LCD_RAMRegister_0
  *                   - LCD_RAMRegister_1:select LCD_RAMRegister_1
  *                   - LCD_RAMRegister_2:select LCD_RAMRegister_2
@@ -306,7 +305,7 @@ void LCD_SEGConfig ( uint64_t SEGSelect, FunctionalState NewState )
  * @param  LCD_LED_Data[in]: LCD_LED display data.
  * @retval None
  */
-void LCD_Write ( LCD_RAMRegister_Typedef LCD_RAMRegister, uint8_t LCD_LED_Data )
+void LCD_Write(LCD_RAMRegister_Typedef LCD_RAMRegister, uint8_t LCD_LED_Data)
 {
     LCD_LED->SEGRn[LCD_RAMRegister] = LCD_LED_Data;
 }
@@ -314,10 +313,10 @@ void LCD_Write ( LCD_RAMRegister_Typedef LCD_RAMRegister, uint8_t LCD_LED_Data )
 /**
  * @brief  Switching COM port output.
  * @note   If the duty cycle is selected as 1/8
-							Default COM7 output first, ending at COM0.
+                            Default COM7 output first, ending at COM0.
  * @retval None
  */
-void LCD_CustomModeScan ( void )
+void LCD_CustomModeScan(void)
 {
     LCD_LED->DDR_CON |= DDR_CON_TRICOM;
 }
@@ -339,5 +338,5 @@ void LCD_CustomModeScan ( void )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
-
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

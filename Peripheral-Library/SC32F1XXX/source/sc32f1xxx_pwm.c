@@ -11,9 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #if !defined(SC32f15xx)
-#include "sc32f1xxx_pwm.h"
+#    include "sc32f1xxx_pwm.h"
 
-/** @defgroup PWM_Exported_Functions_Group1 Configuration of the PWM computation unit functions
+/** @defgroup PWM_Exported_Functions_Group1 Configuration of the PWM computation
+unit functions
  *  @brief   Configuration of the PWM computation unit functions
  *
 @verbatim
@@ -30,61 +31,64 @@
  *             - PWM0:Select PWM0
  * @retval None
  */
-void PWM_DeInit ( PWM_TypeDef* PWMx )
+void PWM_DeInit(PWM_TypeDef* PWMx)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
-    if ( PWMx == PWM0 )
-    {
+    if (PWMx == PWM0) {
         /* Enable PWM reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_PWM0, ENABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_PWM0, ENABLE);
         /* Enable PWM reset state */
-        RCC_APB0PeriphResetCmd ( RCC_APB0Periph_PWM0, DISABLE );
+        RCC_APB0PeriphResetCmd(RCC_APB0Periph_PWM0, DISABLE);
     }
 }
 
 /**
-  * @brief  Fills each PWM_InitStruct member with its default value.
-  * @param  PWM_InitStruct[out]:Pointer to structure PWM_InitTypeDef, to be initialized.
-  * @retval None
-  */
-void PWM_StructInit ( PWM_InitTypeDef* PWM_InitStruct )
+ * @brief  Fills each PWM_InitStruct member with its default value.
+ * @param  PWM_InitStruct[out]:Pointer to structure PWM_InitTypeDef, to be
+ * initialized.
+ * @retval None
+ */
+void PWM_StructInit(PWM_InitTypeDef* PWM_InitStruct)
 {
     /* Set the default configuration */
-    PWM_InitStruct->PWM_AlignedMode = PWM_AlignmentMode_Edge;
-    PWM_InitStruct->PWM_Cycle = 0x0000;
+    PWM_InitStruct->PWM_AlignedMode       = PWM_AlignmentMode_Edge;
+    PWM_InitStruct->PWM_Cycle             = 0x0000;
     PWM_InitStruct->PWM_LowPolarityChannl = PWMChannel_Less;
-    PWM_InitStruct->PWM_OutputChannel = PWMChannel_Less;
-    PWM_InitStruct->PWM_Prescaler = PWM_PRESCALER_DIV1;
-    PWM_InitStruct->PWM_WorkMode = PWM_WorkMode_Independent;
+    PWM_InitStruct->PWM_OutputChannel     = PWMChannel_Less;
+    PWM_InitStruct->PWM_Prescaler         = PWM_PRESCALER_DIV1;
+    PWM_InitStruct->PWM_WorkMode          = PWM_WorkMode_Independent;
 }
 
 /**
-  * @brief  Initializes the PWMx peripheral according to
-  *         the specified parameters in the PWM_Base_InitStruct.
+ * @brief  Initializes the PWMx peripheral according to
+ *         the specified parameters in the PWM_Base_InitStruct.
  * @param  PWMx[out]: where x can be to select the PWMx peripheral.
  *             - PWM:Select PWM
- * @param  PWM_InitStruct[out]:Pointer to structure PWM_InitTypeDef, to be initialized.
+ * @param  PWM_InitStruct[out]:Pointer to structure PWM_InitTypeDef, to be
+ * initialized.
  * @retval None
  */
-void PWM_Init ( PWM_TypeDef* PWMx, PWM_InitTypeDef* PWM_InitStruct )
+void PWM_Init(PWM_TypeDef* PWMx, PWM_InitTypeDef* PWM_InitStruct)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_PWM_COMPLEMENTARY_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_COMPLEMENTARY_PERIPH(PWMx));
 
-    /*---------------------------- PWMx PWM_CON Configuration ------------------------*/
+    /*---------------------------- PWMx PWM_CON Configuration
+     * ------------------------*/
     /* Get the PWMx PWM_CON value */
     tmpreg = PWMx->PWM_CON;
     /* Clear PWMCLK, PWMMD0 and PWMMD1 SPR bits */
-    tmpreg &= ( uint32_t ) ~ ( PWM_CON_PWMCLK | PWM_CON_PWMMD0 | PWM_CON_PWMMD1 );
+    tmpreg &= (uint32_t)~(PWM_CON_PWMCLK | PWM_CON_PWMMD0 | PWM_CON_PWMMD1);
     /* Configure PWMx: Prescaler, AlignedMode and WorkMode */
     /* Set PWMCLK bits according to Prescaler value */
     /* Set PWMMD0 bit according to AlignedMode value */
     /* Set PWMMD1 bit according to WorkMode value */
-    tmpreg |= ( uint32_t ) ( PWM_InitStruct->PWM_Prescaler | PWM_InitStruct->PWM_AlignedMode |
-                             PWM_InitStruct->PWM_WorkMode );
+    tmpreg |= (uint32_t)(PWM_InitStruct->PWM_Prescaler |
+                         PWM_InitStruct->PWM_AlignedMode |
+                         PWM_InitStruct->PWM_WorkMode);
 
     /* Write to PWMx PWM_CON */
     PWMx->PWM_CON = tmpreg;
@@ -99,28 +103,28 @@ void PWM_Init ( PWM_TypeDef* PWMx, PWM_InitTypeDef* PWM_InitStruct )
     PWMx->PWM_CYCLE = PWM_InitStruct->PWM_Cycle;
 }
 
-
 /**
  * @brief  Configures the PWMx Rising Dead Time Register value
  * @param  PWMx[out]: where x can be to select the PWMx peripheral.
  *             - PWM0:Select PWM0
- * @param  PWM_RisingDeadTime[in]: specifies the Rising Dead Time register new value.
+ * @param  PWM_RisingDeadTime[in]: specifies the Rising Dead Time register new
+ * value.
  * @retval None.
  */
-void PWM_RisingDeadTimeConfig ( PWM_TypeDef* PWMx, uint8_t PWM_RisingDeadTime )
+void PWM_RisingDeadTimeConfig(PWM_TypeDef* PWMx, uint8_t PWM_RisingDeadTime)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_PWM_COMPLEMENTARY_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_COMPLEMENTARY_PERIPH(PWMx));
 
     /* Get the PWMx PWM_DFR value */
     tmpreg = PWMx->PWM_DFR;
 
     /* Clear PDR bits */
-    tmpreg &= ( uint32_t ) ~ ( PWM_DFR_PDR );
+    tmpreg &= (uint32_t)~(PWM_DFR_PDR);
 
     /* Set PDR bits to Rising Dead Time value */
-    tmpreg |= ( uint32_t ) ( PWM_RisingDeadTime << PWM_DFR_PDR_Pos );
+    tmpreg |= (uint32_t)(PWM_RisingDeadTime << PWM_DFR_PDR_Pos);
 
     /* Write to PWMx PWM_DFR */
     PWMx->PWM_DFR = tmpreg;
@@ -130,23 +134,24 @@ void PWM_RisingDeadTimeConfig ( PWM_TypeDef* PWMx, uint8_t PWM_RisingDeadTime )
  * @brief  Configures the PWMx Dead Falling Time Register value
  * @param  PWMx[out]: where x can be to select the PWMx peripheral.
  *             - PWM0:Select PWM0
- * @param  PWM_fallingDeadTime[in]: specifies the Falling Dead Time register new value.
+ * @param  PWM_fallingDeadTime[in]: specifies the Falling Dead Time register new
+ * value.
  * @retval None.
  */
-void PWM_FallingDeadTimeConfig ( PWM_TypeDef* PWMx, uint8_t PWM_FallingDeadTime )
+void PWM_FallingDeadTimeConfig(PWM_TypeDef* PWMx, uint8_t PWM_FallingDeadTime)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
     /* Get the PWMx PWM_DFR value */
     tmpreg = PWMx->PWM_DFR;
 
     /* Clear PDF bits */
-    tmpreg &= ( uint32_t ) ~ ( PWM_DFR_PDF );
+    tmpreg &= (uint32_t)~(PWM_DFR_PDF);
 
     /* Set PDF bits to Rising Dead Time value */
-    tmpreg |= ( uint32_t ) ( PWM_FallingDeadTime << PWM_DFR_PDF_Pos );
+    tmpreg |= (uint32_t)(PWM_FallingDeadTime << PWM_DFR_PDF_Pos);
 
     /* Write to PWMx PWM_DFR */
     PWMx->PWM_DFR = tmpreg;
@@ -161,21 +166,19 @@ void PWM_FallingDeadTimeConfig ( PWM_TypeDef* PWMx, uint8_t PWM_FallingDeadTime 
  *                  - ENABLE:Function enable
  * @retval None
  */
-void PWM_Cmd ( PWM_TypeDef* PWMx, FunctionalState NewState )
+void PWM_Cmd(PWM_TypeDef* PWMx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the PWM Counter */
         PWMx->PWM_CON |= PWM_CON_ENPWM;
     }
-    else
-    {
+    else {
         /* Disable the PWM Counter */
-        PWMx->PWM_CON &= ( uint16_t ) ~PWM_CON_ENPWM;
+        PWMx->PWM_CON &= (uint16_t)~PWM_CON_ENPWM;
     }
 }
 
@@ -194,14 +197,14 @@ void PWM_Cmd ( PWM_TypeDef* PWMx, FunctionalState NewState )
  *             - PWM_PRESCALER_DIV128: Clock division: Fsource/128
  * @retval None
  */
-void PWM_SetPrescaler ( PWM_TypeDef* PWMx, PWM_Prescaler_TypeDef PWM_Prescaler )
+void PWM_SetPrescaler(PWM_TypeDef* PWMx, PWM_Prescaler_TypeDef PWM_Prescaler)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_PWM_PRESCALER ( PWM_Prescaler ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_PWM_PRESCALER(PWM_Prescaler));
 
     /* Reset the CKD Bits */
-    PWMx->PWM_CON &= ( uint16_t ) ~ ( PWM_CON_PWMCLK );
+    PWMx->PWM_CON &= (uint16_t)~(PWM_CON_PWMCLK);
 
     /* Set the CKD value */
     PWMx->PWM_CON |= PWM_Prescaler;
@@ -221,15 +224,14 @@ void PWM_SetPrescaler ( PWM_TypeDef* PWMx, PWM_Prescaler_TypeDef PWM_Prescaler )
  *             - PWM_PRESCALER_DIV64: Clock division: Fsource/64
  *             - PWM_PRESCALER_DIV128: Clock division: Fsource/128
  */
-PWM_Prescaler_TypeDef PWM_GetPrescaler ( PWM_TypeDef* PWMx )
+PWM_Prescaler_TypeDef PWM_GetPrescaler(PWM_TypeDef* PWMx)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
     /* Get the CKD value */
-    return ( PWM_Prescaler_TypeDef ) ( PWMx->PWM_CON & PWM_CON_PWMCLK );
+    return (PWM_Prescaler_TypeDef)(PWMx->PWM_CON & PWM_CON_PWMCLK);
 }
-
 
 /**
  * @brief  Sets the PWMx Cycle Register value
@@ -238,10 +240,10 @@ PWM_Prescaler_TypeDef PWM_GetPrescaler ( PWM_TypeDef* PWMx )
  * @param  PWM_Cycle[in]: specifies the ReloadData register new value.
  * @retval None
  */
-void PWM_SetCycle ( PWM_TypeDef* PWMx, uint32_t PWM_Cycle )
+void PWM_SetCycle(PWM_TypeDef* PWMx, uint32_t PWM_Cycle)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
     /* Set the ReloadData Register value */
     PWMx->PWM_CYCLE = PWM_Cycle;
@@ -253,13 +255,13 @@ void PWM_SetCycle ( PWM_TypeDef* PWMx, uint32_t PWM_Cycle )
  *             - PWM0:Select PWM0
  * @retval Period value of PWM
  */
-uint16_t PWM_GetCycle ( PWM_TypeDef* PWMx )
+uint16_t PWM_GetCycle(PWM_TypeDef* PWMx)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
     /* Get the ReloadData Register value */
-    return ( uint16_t ) PWMx->PWM_CYCLE;
+    return (uint16_t)PWMx->PWM_CYCLE;
 }
 
 /**
@@ -280,19 +282,19 @@ uint16_t PWM_GetCycle ( PWM_TypeDef* PWMx )
  * @param  PWM_Duty[in]: specifies the Duty register new value.
  * @retval None
  */
-void PWM_SetDuty ( PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel, uint16_t PWM_Duty )
+void PWM_SetDuty(PWM_TypeDef*        PWMx,
+                 PWM_Channel_Typedef PWM_Channel,
+                 uint16_t            PWM_Duty)
 {
-    uint8_t tmpvalue;
+    uint8_t  tmpvalue;
     uint32_t tmpchannel;
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_PWM_CHANNEL ( PWM_Channel ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_PWM_CHANNEL(PWM_Channel));
 
     tmpchannel = 1;
-    for ( tmpvalue = 0; tmpvalue < 8; tmpvalue++ )
-    {
-        if ( ( uint32_t ) PWM_Channel & tmpchannel )
-        {
+    for (tmpvalue = 0; tmpvalue < 8; tmpvalue++) {
+        if ((uint32_t)PWM_Channel & tmpchannel) {
             PWMx->PWM_DT[tmpvalue] = PWM_Duty;
         }
         tmpchannel = tmpchannel << 1;
@@ -316,20 +318,18 @@ void PWM_SetDuty ( PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel, uint16_t 
  *             - PWM_Channel_All:PMW output channel ALL
  * @retval the Duty register new value.
  */
-uint16_t PWM_GetDuty ( PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel )
+uint16_t PWM_GetDuty(PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel)
 {
-    uint8_t tmpvalue ;
+    uint8_t  tmpvalue;
     uint32_t tmpchannel;
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_PWM_CHANNEL ( PWM_Channel ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_PWM_CHANNEL(PWM_Channel));
 
     tmpchannel = 1;
-    for ( tmpvalue = 0; tmpvalue < 8; tmpvalue++ )
-    {
-        if ( ( uint32_t ) PWM_Channel & tmpchannel )
-        {
-            return ( uint16_t ) ( PWMx->PWM_DT[tmpvalue] );
+    for (tmpvalue = 0; tmpvalue < 8; tmpvalue++) {
+        if ((uint32_t)PWM_Channel & tmpchannel) {
+            return (uint16_t)(PWMx->PWM_DT[tmpvalue]);
         }
         tmpchannel = tmpchannel << 1;
     }
@@ -340,8 +340,6 @@ uint16_t PWM_GetDuty ( PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel )
  * @}
  */
 /* End of PWM_Group1.	*/
-
-
 
 /** @defgroup PWM_Group2 Fault Dectection management functions
  *  @brief   Fault Dectection management functions
@@ -355,32 +353,35 @@ uint16_t PWM_GetDuty ( PWM_TypeDef* PWMx, PWM_Channel_Typedef PWM_Channel )
   */
 
 /**
-  * @brief  Fill each parameter in PWM_FDInitStruct with its default value.
-  * @param  PWM_FDInitStruct[out]:Pointer to structure PWM_FDInitTypeDef, to be initialized.
-  * @retval None
-  */
-void PWM_FDStructInit ( PWM_FDInitTypeDef* PWM_FDInitStruct )
+ * @brief  Fill each parameter in PWM_FDInitStruct with its default value.
+ * @param  PWM_FDInitStruct[out]:Pointer to structure PWM_FDInitTypeDef, to be
+ * initialized.
+ * @retval None
+ */
+void PWM_FDStructInit(PWM_FDInitTypeDef* PWM_FDInitStruct)
 {
     /* Set the default configuration */
     PWM_FDInitStruct->PWM_FDFilteringTime = PWM_FilteringTime_0us;
-    PWM_FDInitStruct->PWM_FDMode = PWM_FDMode_Latch;
-    PWM_FDInitStruct->PWM_FDVoltage = PWM_FDVoltage_Low;
+    PWM_FDInitStruct->PWM_FDMode          = PWM_FDMode_Latch;
+    PWM_FDInitStruct->PWM_FDVoltage       = PWM_FDVoltage_Low;
 }
 
 /**
  * @brief  Set PWM fault detection mode.
  * @param  PWMx[out]: where x can be to select the PWMx peripheral.
  *             - PWM0:Select PWM0
- * @param  PWM_FDInitStruct[out]:Pointer to structure PWM_FDInitTypeDef, to be initialized.
+ * @param  PWM_FDInitStruct[out]:Pointer to structure PWM_FDInitTypeDef, to be
+ * initialized.
  * @retval None
  */
-void PWM_FDInit ( PWM_TypeDef* PWMx, PWM_FDInitTypeDef* PWM_FDInitStruct )
+void PWM_FDInit(PWM_TypeDef* PWMx, PWM_FDInitTypeDef* PWM_FDInitStruct)
 {
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
 
-    PWMx->PWM_FLT &= ( uint32_t ) ~ ( PWM_FLT_FLTDT | PWM_FLT_FLTTV | PWM_FLT_FLTMD );
-    PWMx->PWM_FLT |= ( uint32_t ) ( PWM_FDInitStruct->PWM_FDFilteringTime | PWM_FDInitStruct->PWM_FDMode |
-                                    PWM_FDInitStruct->PWM_FDVoltage );
+    PWMx->PWM_FLT &= (uint32_t)~(PWM_FLT_FLTDT | PWM_FLT_FLTTV | PWM_FLT_FLTMD);
+    PWMx->PWM_FLT |= (uint32_t)(PWM_FDInitStruct->PWM_FDFilteringTime |
+                                PWM_FDInitStruct->PWM_FDMode |
+                                PWM_FDInitStruct->PWM_FDVoltage);
 }
 
 /**
@@ -392,21 +393,19 @@ void PWM_FDInit ( PWM_TypeDef* PWMx, PWM_FDInitTypeDef* PWM_FDInitStruct )
  *                  - ENABLE:Function enable
  * @retval None
  */
-void PWM_FDCmd ( PWM_TypeDef* PWMx, FunctionalState NewState )
+void PWM_FDCmd(PWM_TypeDef* PWMx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the PWM Fault Dectection */
         PWMx->PWM_FLT |= PWM_FLT_FLTEN;
     }
-    else
-    {
+    else {
         /* Disable the PWM Fault Dectection */
-        PWMx->PWM_FLT &= ( uint16_t ) ~PWM_FLT_FLTEN;
+        PWMx->PWM_FLT &= (uint16_t)~PWM_FLT_FLTEN;
     }
 }
 /**
@@ -428,29 +427,28 @@ void PWM_FDCmd ( PWM_TypeDef* PWMx, FunctionalState NewState )
  * @brief  Enables or disables the specified PWM interrupts.
  * @param  PWMx[out]: where x can be to select the PWMx peripheral.
  *             - PWM0:Select PWM0
- * @param  PWM_IT[in]:specifies the PWM interrupts sources to be enabled or disabled.
+ * @param  PWM_IT[in]:specifies the PWM interrupts sources to be enabled or
+ * disabled.
  *             - PWM_IT_INTEN:PWM Interrupt: PWM Interrupt
  * @param  NewState[in]:new state of the PWM interrupts.
  *                  - DISABLE:Function disable
  *                  - ENABLE:Function enable
  * @retval None
  */
-void PWM_ITConfig ( PWM_TypeDef* PWMx, uint16_t PWM_IT, FunctionalState NewState )
+void PWM_ITConfig(PWM_TypeDef* PWMx, uint16_t PWM_IT, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_PWM_IT ( PWM_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_PWM_IT(PWM_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the Interrupt sources */
         PWMx->PWM_CON |= PWM_IT;
     }
-    else
-    {
+    else {
         /* Disable the Interrupt sources */
-        PWMx->PWM_CON &= ( uint16_t ) ~PWM_IT;
+        PWMx->PWM_CON &= (uint16_t)~PWM_IT;
     }
 }
 
@@ -464,19 +462,17 @@ void PWM_ITConfig ( PWM_TypeDef* PWMx, uint16_t PWM_IT, FunctionalState NewState
  * @retval The new state of PWM_FLAG (SET or RESET).
 
  */
-FlagStatus PWM_GetFlagStatus ( PWM_TypeDef* PWMx, uint16_t PWM_FLAG )
+FlagStatus PWM_GetFlagStatus(PWM_TypeDef* PWMx, uint16_t PWM_FLAG)
 {
     ITStatus bitstatus = RESET;
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_PWM_FLAG ( PWM_FLAG ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_PWM_FLAG(PWM_FLAG));
 
-    if ( ( PWMx->PWM_STS & PWM_FLAG ) != ( uint16_t ) RESET )
-    {
+    if ((PWMx->PWM_STS & PWM_FLAG) != (uint16_t)RESET) {
         bitstatus = SET;
     }
-    else
-    {
+    else {
         bitstatus = RESET;
     }
     return bitstatus;
@@ -491,14 +487,14 @@ FlagStatus PWM_GetFlagStatus ( PWM_TypeDef* PWMx, uint16_t PWM_FLAG )
  *             - PWM_Flag_FLTSTA:PWM Interrupt: Flult Interrupt
  * @retval None
  */
-void PWM_ClearFlag ( PWM_TypeDef* PWMx, uint16_t PWM_FLAG )
+void PWM_ClearFlag(PWM_TypeDef* PWMx, uint16_t PWM_FLAG)
 {
     /* Check the parameters */
-    assert_param ( IS_PWM_ALL_PERIPH ( PWMx ) );
-    assert_param ( IS_GET_PWM_FLAG ( PWM_FLAG ) );
+    assert_param(IS_PWM_ALL_PERIPH(PWMx));
+    assert_param(IS_GET_PWM_FLAG(PWM_FLAG));
 
     /* Clear the flags */
-    PWMx->PWM_STS = ( uint16_t ) PWM_FLAG;
+    PWMx->PWM_STS = (uint16_t)PWM_FLAG;
 }
 #endif
 /**
@@ -519,4 +515,5 @@ void PWM_ClearFlag ( PWM_TypeDef* PWMx, uint16_t PWM_FLAG )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/

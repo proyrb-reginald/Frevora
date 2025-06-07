@@ -27,13 +27,12 @@
 #define __sc32f1xxx_PWR_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "sc32f1xxx.h"
 #include "sc32.h"
+#include "sc32f1xxx.h"
 #include "sc32f1xxx_rcc.h"
 
 /** @addtogroup sc32f1xxx_StdPeriph_Driver
@@ -51,15 +50,14 @@ extern "C"
 /** @brief PWR_IDLEEntry PWR IDLE Mode Entry
  * @{
  */
-typedef enum
-{
-    PWR_IDLEEntry_WFI = ( ( uint8_t ) 0x01 ), /*!< WFI SLEEP Mode   */
-    PWR_IDLEEntry_WFE = ( ( uint8_t ) 0x02 ), /*!< WFE SLEEP Mode   */
+typedef enum {
+    PWR_IDLEEntry_WFI = ((uint8_t)0x01), /*!< WFI SLEEP Mode   */
+    PWR_IDLEEntry_WFE = ((uint8_t)0x02), /*!< WFE SLEEP Mode   */
 
 } PWR_IDLEEntry_TypeDef;
 
-#define IS_PWR_IDLE_ENTRY(ENTRY) (((ENTRY) == PWR_IDLEEntry_WFI) || \
-                                   ((ENTRY) == PWR_IDLEEntry_WFE))
+#define IS_PWR_IDLE_ENTRY(ENTRY)                                               \
+    (((ENTRY) == PWR_IDLEEntry_WFI) || ((ENTRY) == PWR_IDLEEntry_WFE))
 /**
  * @}
  */
@@ -67,15 +65,14 @@ typedef enum
 /** @brief PWR_STOPEntry PWR STOP Mode Entry
  * @{
  */
-typedef enum
-{
-    PWR_STOPEntry_WFI = ( ( uint8_t ) 0x01 ), /*!< WFI STOP Mode   */
-    PWR_STOPEntry_WFE = ( ( uint8_t ) 0x02 ), /*!< WFE STOP Mode   */
+typedef enum {
+    PWR_STOPEntry_WFI = ((uint8_t)0x01), /*!< WFI STOP Mode   */
+    PWR_STOPEntry_WFE = ((uint8_t)0x02), /*!< WFE STOP Mode   */
 
 } PWR_STOPEntry_TypeDef;
 
-#define IS_PWR_STOP_ENTRY(ENTRY) (((ENTRY) == PWR_STOPEntry_WFI) || \
-                                   ((ENTRY) == PWR_STOPEntry_WFE))
+#define IS_PWR_STOP_ENTRY(ENTRY)                                               \
+    (((ENTRY) == PWR_STOPEntry_WFI) || ((ENTRY) == PWR_STOPEntry_WFE))
 /**
  * @}
  */
@@ -89,9 +86,10 @@ typedef enum
  * @{
  */
 
-/* Low Power modes configuration functions ********************************************************/
-void PWR_EnterIDLEMode ( uint8_t PWR_IDLEEntry );
-void PWR_EnterSTOPMode ( uint8_t PWR_STOPEntry );
+/* Low Power modes configuration functions
+ * ********************************************************/
+void PWR_EnterIDLEMode(uint8_t PWR_IDLEEntry);
+void PWR_EnterSTOPMode(uint8_t PWR_STOPEntry);
 /**
  * @}
  */

@@ -51,23 +51,24 @@
  *               - GPIOD: select the GPIOD peripheral
  * @retval None
  */
-void GPIO_DeInit ( GPIO_TypeDef* GPIOx )
+void GPIO_DeInit(GPIO_TypeDef* GPIOx)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
 
     /* Deinitializes the GPIOx PXCON register to their default reset values. */
-    GPIOx->PXCON &= ( uint32_t ) ( ~GPIO_PIN_All );
+    GPIOx->PXCON &= (uint32_t)(~GPIO_PIN_All);
     /* Deinitializes the GPIOx PXPH register to their default reset values. */
-    GPIOx->PXPH &= ( uint32_t ) ( ~GPIO_PIN_All );
+    GPIOx->PXPH &= (uint32_t)(~GPIO_PIN_All);
     /* Deinitializes the GPIOx PIN register to their default reset values. */
-    GPIOx->PIN &= ( uint32_t ) ( ~GPIO_PIN_All );
+    GPIOx->PIN &= (uint32_t)(~GPIO_PIN_All);
     /* Deinitializes the GPIOx PXLEV register to their default reset values. */
-    GPIOx->PXLEV &= ( uint32_t ) 0x00000000;
+    GPIOx->PXLEV &= (uint32_t)0x00000000;
 }
 
 /**
- * @brief  Initializes the peripheral GPIOx register with the parameters specified in GPIO_InitStruct.
+ * @brief  Initializes the peripheral GPIOx register with the parameters
+ * specified in GPIO_InitStruct.
  * @param  GPIOx[in]: where x can be to select the GPIO peripheral.
  *                SC32f10xx Selection range(GPIOA - GPIOC)
  *                SC32f11xx Selection range(GPIOA - GPIOD)
@@ -77,48 +78,45 @@ void GPIO_DeInit ( GPIO_TypeDef* GPIOx )
  *               - GPIOB: select the GPIOB peripheral
  *               - GPIOC: select the GPIOC peripheral
  *               - GPIOD: select the GPIOD peripheral
- * @param  GPIO_InitStruct[out]: Pointer to structure GPIO_InitTypeDef, to be initialized.
+ * @param  GPIO_InitStruct[out]: Pointer to structure GPIO_InitTypeDef, to be
+ * initialized.
  * @retval None
  */
-void GPIO_Init ( GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct )
+void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
 {
     uint32_t tmppin, tmppos, tmpreg;
 
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GPIO_PIN ( GPIO_InitStruct->GPIO_Pin ) );
-    assert_param ( IS_GPIO_MODE ( GPIO_InitStruct->GPIO_Mode ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GPIO_PIN(GPIO_InitStruct->GPIO_Pin));
+    assert_param(IS_GPIO_MODE(GPIO_InitStruct->GPIO_Mode));
 
-    if ( GPIO_InitStruct->GPIO_Mode == GPIO_Mode_OUT_PP )
-    {
+    if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_OUT_PP) {
         /* Configure Pins to High-resistance output mode */
-        GPIOx->PXCON |= ( uint32_t ) GPIO_InitStruct->GPIO_Pin;
+        GPIOx->PXCON |= (uint32_t)GPIO_InitStruct->GPIO_Pin;
     }
-    else if ( GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IN_PU )
-    {
+    else if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IN_PU) {
         /* Configure Pins to Pull-up input mode */
-        GPIOx->PXCON &= ( uint32_t ) ( ~GPIO_InitStruct->GPIO_Pin );
-        GPIOx->PXPH |= ( uint32_t ) GPIO_InitStruct->GPIO_Pin;
+        GPIOx->PXCON &= (uint32_t)(~GPIO_InitStruct->GPIO_Pin);
+        GPIOx->PXPH |= (uint32_t)GPIO_InitStruct->GPIO_Pin;
     }
-    else if ( GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IN_HI )
-    {
+    else if (GPIO_InitStruct->GPIO_Mode == GPIO_Mode_IN_HI) {
         /* Configure Pin to High-resistance intput mode */
-        GPIOx->PXCON &= ( uint32_t ) ( ~GPIO_InitStruct->GPIO_Pin );
-        GPIOx->PXPH &= ( uint32_t ) ( ~GPIO_InitStruct->GPIO_Pin );
+        GPIOx->PXCON &= (uint32_t)(~GPIO_InitStruct->GPIO_Pin);
+        GPIOx->PXPH &= (uint32_t)(~GPIO_InitStruct->GPIO_Pin);
     }
 
     /* Get GPIOx PXLEV value */
     tmpreg = GPIOx->PXLEV;
     /* Query the Pins that needs to be manipulated */
-    for ( tmppos = 0; tmppos < 16; tmppos++ )
-    {
-        tmppin = ( uint32_t ) ( 0x01 << tmppos );
-        if ( ( tmppin & GPIO_InitStruct->GPIO_Pin ) != RESET )
-        {
+    for (tmppos = 0; tmppos < 16; tmppos++) {
+        tmppin = (uint32_t)(0x01 << tmppos);
+        if ((tmppin & GPIO_InitStruct->GPIO_Pin) != RESET) {
             /* Clear the LEVx bits */
-            tmpreg &= ( uint32_t ) ~ ( GPIO_DriveLevel_3 << ( tmppos * 2 ) );
+            tmpreg &= (uint32_t)~(GPIO_DriveLevel_3 << (tmppos * 2));
             /* Set LEVx bits according to Drive Level value */
-            tmpreg |= ( uint32_t ) ( GPIO_InitStruct->GPIO_DriveLevel << ( tmppos * 2 ) );
+            tmpreg |=
+                (uint32_t)(GPIO_InitStruct->GPIO_DriveLevel << (tmppos * 2));
         }
     }
     /* Store GPIOx PXLEV the new value */
@@ -156,33 +154,33 @@ void GPIO_Init ( GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct )
  *                   - GPIO_PIN_LNIB:Pin Low 8 Bits selected
  *                   - GPIO_PIN_HNIB:Pin High 8 Bits selected
  *                   - GPIO_PIN_All:All pins selected
- * @param  GPIO_DriveLevel[in]: specifies the operating Drive Level for the selected pins.
+ * @param  GPIO_DriveLevel[in]: specifies the operating Drive Level for the
+ * selected pins.
  *                  - GPIO_DriveLevel_0:I/O output Drive: Level 0(Max)
  *                  - GPIO_DriveLevel_1:I/O output Drive: Level 1
  *                  - GPIO_DriveLevel_2:I/O output Drive: Level 2
  *                  - GPIO_DriveLevel_3:I/O output Drive: Level 3
  * @retval None
  */
-void GPIO_SetDriveLevel ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_DriveLevel_TypeDef GPIO_DriveLevel )
+void GPIO_SetDriveLevel(GPIO_TypeDef*           GPIOx,
+                        uint16_t                GPIO_Pin,
+                        GPIO_DriveLevel_TypeDef GPIO_DriveLevel)
 {
     uint32_t tmppin, tmppos, tmpreg;
     /* Get GPIOx PXLEV value */
     tmpreg = GPIOx->PXLEV;
     /* Query the Pins that needs to be manipulated */
-    for ( tmppos = 0; tmppos < 16; tmppos++ )
-    {
-        tmppin = ( uint32_t ) ( 0x01 << tmppos );
-        if ( ( tmppin & GPIO_Pin ) != RESET )
-        {
+    for (tmppos = 0; tmppos < 16; tmppos++) {
+        tmppin = (uint32_t)(0x01 << tmppos);
+        if ((tmppin & GPIO_Pin) != RESET) {
             /* Clear the LEVx bits */
-            tmpreg &= ( uint32_t ) ~ ( GPIO_DriveLevel_3 << ( tmppos * 2 ) );
+            tmpreg &= (uint32_t)~(GPIO_DriveLevel_3 << (tmppos * 2));
             /* Set LEVx bits according to Drive Level value */
-            tmpreg |= ( uint32_t ) ( GPIO_DriveLevel << ( tmppos * 2 ) );
+            tmpreg |= (uint32_t)(GPIO_DriveLevel << (tmppos * 2));
         }
     }
     /* Store GPIOx PXLEV the new value */
     GPIOx->PXLEV = tmpreg;
-
 }
 
 /**
@@ -234,12 +232,12 @@ void GPIO_SetDriveLevel ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_DriveLeve
  *                   - GPIO_PIN_HNIB:Pin High 8 Bits selected
  *                   - GPIO_PIN_All:All pins selected
  */
-uint16_t GPIO_ReadData ( GPIO_TypeDef* GPIOx )
+uint16_t GPIO_ReadData(GPIO_TypeDef* GPIOx)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
 
-    return ( uint16_t ) ( GPIOx->PIN );
+    return (uint16_t)(GPIOx->PIN);
 }
 
 /**
@@ -277,19 +275,17 @@ uint16_t GPIO_ReadData ( GPIO_TypeDef* GPIOx )
  *              - Bit_RESET
  *              - Bit_SET
  */
-BitAction GPIO_ReadDataBit ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
+BitAction GPIO_ReadDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
     BitAction bitstatus;
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GPIO_PIN ( GPIO_Pin ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GPIO_PIN(GPIO_Pin));
 
-    if ( GPIOx->PIN & GPIO_Pin )
-    {
+    if (GPIOx->PIN & GPIO_Pin) {
         bitstatus = Bit_SET;
     }
-    else
-    {
+    else {
         bitstatus = Bit_RESET;
     }
 
@@ -329,17 +325,15 @@ BitAction GPIO_ReadDataBit ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
  *                   - GPIO_PIN_All:All pins selected
  * @retval None
  */
-void GPIO_SetBits ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
+void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GPIO_PIN ( GPIO_Pin ) );
-    __IO uint32_t tmpreg = ( uint32_t ) GPIOx;
-    while ( GPIO_Pin != 0 )
-    {
-        if ( GPIO_Pin & 0x0001 )
-        {
-            ( * ( ( uint8_t* ) ( tmpreg ) ) ) = 1;
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GPIO_PIN(GPIO_Pin));
+    __IO uint32_t tmpreg = (uint32_t)GPIOx;
+    while (GPIO_Pin != 0) {
+        if (GPIO_Pin & 0x0001) {
+            (*((uint8_t*)(tmpreg))) = 1;
         }
         GPIO_Pin = GPIO_Pin >> 1;
         tmpreg++;
@@ -379,25 +373,22 @@ void GPIO_SetBits ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
  *                   - GPIO_PIN_All:All pins selected
  * @retval None
  */
-void GPIO_ResetBits ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
+void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GPIO_PIN ( GPIO_Pin ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GPIO_PIN(GPIO_Pin));
 
-    __IO uint32_t tmpreg = ( uint32_t ) GPIOx;
+    __IO uint32_t tmpreg = (uint32_t)GPIOx;
 
-    while ( GPIO_Pin != 0 )
-    {
-        if ( GPIO_Pin & 0x0001 )
-        {
-            ( * ( ( uint8_t* ) ( tmpreg ) ) ) = 0;
+    while (GPIO_Pin != 0) {
+        if (GPIO_Pin & 0x0001) {
+            (*((uint8_t*)(tmpreg))) = 0;
         }
         GPIO_Pin = GPIO_Pin >> 1;
         tmpreg++;
     }
 }
-
 
 /**
  * @brief  Writes data to the specified GPIO data port.
@@ -413,17 +404,17 @@ void GPIO_ResetBits ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
  * @param  PortVal[in]: The value of the port data register to be written.
  * @retval None
  */
-void GPIO_Write ( GPIO_TypeDef* GPIOx, uint16_t PortVal )
+void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
 
     /*  */
     GPIOx->PIN = PortVal;
 }
 
 /**
-  * @brief  Sets or clears the specified data port bit.
+ * @brief  Sets or clears the specified data port bit.
  * @param  GPIOx[in]: where x can be to select the GPIO peripheral.
  *                SC32f10xx Selection range(GPIOA - GPIOC)
  *                SC32f11xx Selection range(GPIOA - GPIOD)
@@ -453,26 +444,24 @@ void GPIO_Write ( GPIO_TypeDef* GPIOx, uint16_t PortVal )
  *                   - GPIO_PIN_LNIB:Pin Low 8 Bits selected
  *                   - GPIO_PIN_HNIB:Pin High 8 Bits selected
  *                   - GPIO_PIN_All:All pins selected
-  * @param  BitVal[in]: specifies the value to be written to the selected bit.
-  *          This parameter can be one of the BitAction enum values:
+ * @param  BitVal[in]: specifies the value to be written to the selected bit.
+ *          This parameter can be one of the BitAction enum values:
  *            -  Bit_RESET: to clear the port pin
  *            -  Bit_SET: to set the port pin
-  * @retval None
-  */
-void GPIO_WriteBit ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal )
+ * @retval None
+ */
+void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GET_GPIO_PIN ( GPIO_Pin ) );
-    assert_param ( IS_GPIO_BITACTION ( BitVal ) );
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
+    assert_param(IS_GPIO_BITACTION(BitVal));
 
-    if ( BitVal != Bit_RESET )
-    {
+    if (BitVal != Bit_RESET) {
         GPIOx->PIN |= GPIO_Pin;
     }
-    else
-    {
-        GPIOx->PIN &= ( ~GPIO_Pin ) ;
+    else {
+        GPIOx->PIN &= (~GPIO_Pin);
     }
 }
 
@@ -509,21 +498,18 @@ void GPIO_WriteBit ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal )
  *                   - GPIO_PIN_All:All pins selected
  * @retval None
  */
-void GPIO_TogglePins ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
+void GPIO_TogglePins(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
     /* Check the parameters */
-    assert_param ( IS_GPIO_ALL_PERIPH ( GPIOx ) );
-    assert_param ( IS_GPIO_PIN ( GPIO_Pin ) );
-    __IO uint32_t tmpreg = ( uint32_t ) GPIOx + ( 0x00000010UL );
-    uint32_t temp = 0;
+    assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
+    assert_param(IS_GPIO_PIN(GPIO_Pin));
+    __IO uint32_t tmpreg = (uint32_t)GPIOx + (0x00000010UL);
+    uint32_t      temp   = 0;
     /* Set the GPIOx PIN value  */
-    while ( GPIO_Pin != 0 )
-    {
-
-        if ( GPIO_Pin & 0x0001 )
-        {
-            temp = ~ ( * ( ( uint8_t* ) ( tmpreg ) ) );
-            ( * ( ( uint8_t* ) ( tmpreg ) ) ) = temp;
+    while (GPIO_Pin != 0) {
+        if (GPIO_Pin & 0x0001) {
+            temp                    = ~(*((uint8_t*)(tmpreg)));
+            (*((uint8_t*)(tmpreg))) = temp;
         }
         GPIO_Pin = GPIO_Pin >> 1;
         tmpreg++;
@@ -547,4 +533,5 @@ void GPIO_TogglePins ( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin )
  * @}
  */
 
-/******************* (C) COPYRIGHT 2022 SinOne Microelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2022 SinOne Microelectronics *****END OF
+ * FILE****/

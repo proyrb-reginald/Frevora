@@ -27,13 +27,12 @@
 #define __sc32f1xxx_OPTION_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "sc32f1xxx.h"
 #include "SC32.h"
+#include "sc32f1xxx.h"
 
 /** @addtogroup sc32f1xxx_StdPeriph_Driver
  * @{
@@ -51,20 +50,18 @@ extern "C"
  * @{
  */
 
-typedef enum
-{
-    OPTION_LVR_DISABLE = ( uint8_t ) 0x04, /*!< LVR Reset: disable */
-    OPTION_LVR_1_9V    = ( uint8_t ) 0x00, /*!< LVR Reset: 1.9V */
-    OPTION_LVR_2_9V    = ( uint8_t ) 0x01, /*!< LVR Reset: 2.9V */
-    OPTION_LVR_3_7V    = ( uint8_t ) 0x02, /*!< LVR Reset: 3.7V */
-    OPTION_LVR_4_3V    = ( uint8_t ) 0x03, /*!< LVR Reset: 4.3V */
+typedef enum {
+    OPTION_LVR_DISABLE = (uint8_t)0x04, /*!< LVR Reset: disable */
+    OPTION_LVR_1_9V    = (uint8_t)0x00, /*!< LVR Reset: 1.9V */
+    OPTION_LVR_2_9V    = (uint8_t)0x01, /*!< LVR Reset: 2.9V */
+    OPTION_LVR_3_7V    = (uint8_t)0x02, /*!< LVR Reset: 3.7V */
+    OPTION_LVR_4_3V    = (uint8_t)0x03, /*!< LVR Reset: 4.3V */
 } OPTION_LVR_TypeDef;
 
-#define IS_OPTION_LVR(LVR) (((LVR) == OPTION_LVR_DISABLE) ||  \
-                            ((LVR) == OPTION_LVR_1_9V) ||  \
-                            ((LVR) == OPTION_LVR_2_9V) ||  \
-                            ((LVR) == OPTION_LVR_3_7V) ||  \
-                            ((LVR) == OPTION_LVR_4_3V))
+#define IS_OPTION_LVR(LVR)                                                     \
+    (((LVR) == OPTION_LVR_DISABLE) || ((LVR) == OPTION_LVR_1_9V) ||            \
+     ((LVR) == OPTION_LVR_2_9V) || ((LVR) == OPTION_LVR_3_7V) ||               \
+     ((LVR) == OPTION_LVR_4_3V))
 
 /**
  * @}
@@ -75,17 +72,19 @@ typedef enum
  * @{
  */
 
-/* option configuration ********************************************************/
-void OPTION_WDTCmd ( FunctionalState NewState );
-void OPTION_LVRConfig (OPTION_LVR_TypeDef OPTION_LVR );
-void OPTION_JTAGCmd ( FunctionalState NewState );
-void OPTION_IAPPORA ( uint16_t IAPPROAST, uint16_t IAPPROAED );
-void OPTION_IAPPORB ( uint16_t IAPPROBST, uint16_t IAPPROBED );
+/* option configuration
+ * ********************************************************/
+void OPTION_WDTCmd(FunctionalState NewState);
+void OPTION_LVRConfig(OPTION_LVR_TypeDef OPTION_LVR);
+void OPTION_JTAGCmd(FunctionalState NewState);
+void OPTION_IAPPORA(uint16_t IAPPROAST, uint16_t IAPPROAED);
+void OPTION_IAPPORB(uint16_t IAPPROBST, uint16_t IAPPROBED);
 /**
  * @}
  */
 
-/* End of exported functions --------------------------------------------------*/
+/* End of exported functions
+ * --------------------------------------------------*/
 
 /**
  * @}

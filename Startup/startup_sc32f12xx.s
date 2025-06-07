@@ -68,7 +68,7 @@ __Vectors       DCD     __initial_sp					; Top of Stack
 				DCD     INT1_7_IRQHandler				; EXTI1~EXTI17
 				DCD     INT8_11_IRQHandler				; EXTI8~EXTI11
 				DCD     INT12_15_IRQHandler			; EXTI12~EXTI15
-				DCD		RCC_IRQHandler					; RCC£ºÍ£Õñ¼ì²â
+				DCD		RCC_IRQHandler					; RCCï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½
 				DCD		0								; Reserved
                 DCD     BTM_IRQHandler					; BTM
                 DCD     UART0_2_4_IRQHandler			; UART0-UART2-UART4

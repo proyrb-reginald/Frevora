@@ -26,7 +26,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sc32f1xxx_dma.h"
 
-/* Exported functions ---------------------------------------------------------*/
+/* Exported functions
+ * ---------------------------------------------------------*/
 /** @defgroup DMA_Exported_Functions
  * @{
  */
@@ -55,17 +56,16 @@
  *                  - DMA3 :select DMA3 peripherals
  * @retval None
  */
-void DMA_DeInit ( DMA_TypeDef* DMAx )
+void DMA_DeInit(DMA_TypeDef* DMAx)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
-    if ( DMAx != 0x00 )
-    {
+    if (DMAx != 0x00) {
         /* Enable DMA reset state */
-        RCC_AHBPeriphResetCmd ( RCC_AHBPeriph_DMA, ENABLE );
+        RCC_AHBPeriphResetCmd(RCC_AHBPeriph_DMA, ENABLE);
         /* Release DMA from reset state */
-        RCC_AHBPeriphResetCmd ( RCC_AHBPeriph_DMA, DISABLE );
+        RCC_AHBPeriphResetCmd(RCC_AHBPeriph_DMA, DISABLE);
     }
 }
 
@@ -81,47 +81,50 @@ void DMA_DeInit ( DMA_TypeDef* DMAx )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
- * @param  DMA_InitStruct[out]:Pointer to structure DMA_InitStruct, to be initialized.
+ * @param  DMA_InitStruct[out]:Pointer to structure DMA_InitStruct, to be
+ * initialized.
  * @retval None
  */
-void DMA_Init ( DMA_TypeDef* DMAx, DMA_InitTypeDef* DMA_InitStruct )
+void DMA_Init(DMA_TypeDef* DMAx, DMA_InitTypeDef* DMA_InitStruct)
 {
     uint32_t tmpreg;
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_DMA_PROIORITY ( DMA_InitStruct->DMA_Priority ) );
-    assert_param ( IS_DMA_CIRCULARMODE ( DMA_InitStruct->DMA_CircularMode ) );
-    assert_param ( IS_DMA_DATASIZE ( DMA_InitStruct->DMA_DataSize ) );
-    assert_param ( IS_DMA_TARGERT_MODE ( DMA_InitStruct->DMA_TargetMode ) );
-    assert_param ( IS_DMA_SOURCE_MODE ( DMA_InitStruct->DMA_SourceMode ) );
-    assert_param ( IS_DMA_BURST ( DMA_InitStruct->DMA_Burst ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_DMA_PROIORITY(DMA_InitStruct->DMA_Priority));
+    assert_param(IS_DMA_CIRCULARMODE(DMA_InitStruct->DMA_CircularMode));
+    assert_param(IS_DMA_DATASIZE(DMA_InitStruct->DMA_DataSize));
+    assert_param(IS_DMA_TARGERT_MODE(DMA_InitStruct->DMA_TargetMode));
+    assert_param(IS_DMA_SOURCE_MODE(DMA_InitStruct->DMA_SourceMode));
+    assert_param(IS_DMA_BURST(DMA_InitStruct->DMA_Burst));
 
     tmpreg = DMAx->DMA_CFG;
 
-    tmpreg &=
-        ( uint32_t ) ~ ( DMA_CFG_PL | DMA_CFG_TXWIDTH | DMA_CFG_CIRC |
-                         DMA_CFG_CHRST | DMA_CFG_CHEN | DMA_CFG_DAINC | DMA_CFG_SAINC |
-                         DMA_CFG_BURSIZE | DMA_CFG_TPTYPE |
-                         DMA_CFG_REQSRC );
+    tmpreg &= (uint32_t)~(DMA_CFG_PL | DMA_CFG_TXWIDTH | DMA_CFG_CIRC |
+                          DMA_CFG_CHRST | DMA_CFG_CHEN | DMA_CFG_DAINC |
+                          DMA_CFG_SAINC | DMA_CFG_BURSIZE | DMA_CFG_TPTYPE |
+                          DMA_CFG_REQSRC);
     tmpreg |=
-        ( uint32_t ) ( DMA_InitStruct->DMA_Priority | DMA_InitStruct->DMA_CircularMode |
-                       DMA_InitStruct->DMA_DataSize | DMA_InitStruct->DMA_TargetMode |
-                       DMA_InitStruct->DMA_SourceMode | DMA_InitStruct->DMA_Burst |
-                       DMA_InitStruct->DMA_Request );
+        (uint32_t)(DMA_InitStruct->DMA_Priority |
+                   DMA_InitStruct->DMA_CircularMode |
+                   DMA_InitStruct->DMA_DataSize |
+                   DMA_InitStruct->DMA_TargetMode |
+                   DMA_InitStruct->DMA_SourceMode | DMA_InitStruct->DMA_Burst |
+                   DMA_InitStruct->DMA_Request);
 
     DMAx->DMA_CFG = tmpreg;
 
     DMAx->DMA_SADR = DMA_InitStruct->DMA_SrcAddress;
     DMAx->DMA_DADR = DMA_InitStruct->DMA_DstAddress;
-    DMAx->DMA_CNT = DMA_InitStruct->DMA_BufferSize;
+    DMAx->DMA_CNT  = DMA_InitStruct->DMA_BufferSize;
 }
 
 /**
-  * @brief  Fills each DMA_InitStruct member with its default value.
-  * @param  DMA_InitStruct[out]:Pointer to structure DMA_InitStruct, to be initialized.
-  * @retval None
-  */
-void DMA_StructInit ( DMA_InitTypeDef* DMA_InitStruct )
+ * @brief  Fills each DMA_InitStruct member with its default value.
+ * @param  DMA_InitStruct[out]:Pointer to structure DMA_InitStruct, to be
+ * initialized.
+ * @retval None
+ */
+void DMA_StructInit(DMA_InitTypeDef* DMA_InitStruct)
 {
     /* Initialize the DMA_Priority member */
     DMA_InitStruct->DMA_Priority = DMA_Priority_LOW;
@@ -146,42 +149,40 @@ void DMA_StructInit ( DMA_InitTypeDef* DMA_InitStruct )
 }
 
 /**
-  * @brief  Enables or disables the specified DMAx.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @param  NewState[in]: new state of the DMAx.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  *
-  * @retval None
-  */
-void DMA_Cmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
+ * @brief  Enables or disables the specified DMAx.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @param  NewState[in]: new state of the DMAx.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ *
+ * @retval None
+ */
+void DMA_Cmd(DMA_TypeDef* DMAx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the selected DMAy Streamx by setting EN bit */
-        DMAx->DMA_CFG |= ( uint32_t ) DMA_CFG_CHEN;
+        DMAx->DMA_CFG |= (uint32_t)DMA_CFG_CHEN;
     }
-    else
-    {
+    else {
         /* Disable the selected DMAy Streamx by clearing EN bit */
-        DMAx->DMA_CFG &= ~ ( uint32_t ) DMA_CFG_CHEN;
+        DMAx->DMA_CFG &= ~(uint32_t)DMA_CFG_CHEN;
     }
 }
 
 /**
-  * @brief  Enables or disables the specified DMAx Pause.
+ * @brief  Enables or disables the specified DMAx Pause.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -191,31 +192,30 @@ void DMA_Cmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @param  NewState[in]: new state of the DMAx.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void DMA_PauseCmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
+ * @param  NewState[in]: new state of the DMAx.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void DMA_PauseCmd(DMA_TypeDef* DMAx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the selected DMAy Streamx by setting PAUSE bit */
-        DMAx->DMA_CFG |= ( uint32_t ) DMA_CFG_PAUSE;
+        DMAx->DMA_CFG |= (uint32_t)DMA_CFG_PAUSE;
     }
-    else
-    {
+    else {
         /* Enable the selected DMAy Streamx by clearing EN bit */
-        DMAx->DMA_CFG = ( uint32_t ) ( ( DMAx->DMA_CFG | DMA_CFG_CHEN ) & ( ~DMA_CFG_PAUSE ) );
+        DMAx->DMA_CFG =
+            (uint32_t)((DMAx->DMA_CFG | DMA_CFG_CHEN) & (~DMA_CFG_PAUSE));
     }
 }
 
 /**
-  * @brief  Enables or disables the specified DMAx CHRQ.
+ * @brief  Enables or disables the specified DMAx CHRQ.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -225,31 +225,29 @@ void DMA_PauseCmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @param  NewState[in]: new state of the DMAx.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void DMA_CHRQCmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
+ * @param  NewState[in]: new state of the DMAx.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void DMA_CHRQCmd(DMA_TypeDef* DMAx, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the selected DMAy Streamx by setting CHRQ bit */
-        DMAx->DMA_CFG |= ( uint32_t ) DMA_CFG_CHRQ;
+        DMAx->DMA_CFG |= (uint32_t)DMA_CFG_CHRQ;
     }
-    else
-    {
+    else {
         /* Enable the selected DMAy Streamx by clearing CHRQ bit */
-        DMAx->DMA_CFG &= ( uint32_t ) ~DMA_CFG_CHRQ;
+        DMAx->DMA_CFG &= (uint32_t)~DMA_CFG_CHRQ;
     }
 }
 
 /**
-  * @brief  Reset DMA Channel
+ * @brief  Reset DMA Channel
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -259,14 +257,14 @@ void DMA_CHRQCmd ( DMA_TypeDef* DMAx, FunctionalState NewState )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @retval None
-  */
-void DMA_ChannelReset ( DMA_TypeDef* DMAx )
+ * @retval None
+ */
+void DMA_ChannelReset(DMA_TypeDef* DMAx)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
-    DMAx->DMA_CFG |= ( uint32_t ) DMA_CFG_CHRST;
+    DMAx->DMA_CFG |= (uint32_t)DMA_CFG_CHRST;
 }
 
 /**
@@ -285,7 +283,7 @@ void DMA_ChannelReset ( DMA_TypeDef* DMAx )
   */
 
 /**
-  * @brief  Sets the source address for the specified DMA.
+ * @brief  Sets the source address for the specified DMA.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -295,21 +293,21 @@ void DMA_ChannelReset ( DMA_TypeDef* DMAx )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @param  SrcAddress[in]:Data source address transmitted by DMAx .
-  *
-  *
-  */
-void DMA_SetSrcAddress ( DMA_TypeDef* DMAx, uint32_t SrcAddress )
+ * @param  SrcAddress[in]:Data source address transmitted by DMAx .
+ *
+ *
+ */
+void DMA_SetSrcAddress(DMA_TypeDef* DMAx, uint32_t SrcAddress)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
     /* Write the number of data units to be transferred */
-    DMAx->DMA_SADR = ( uint32_t ) SrcAddress;
+    DMAx->DMA_SADR = (uint32_t)SrcAddress;
 }
 
 /**
-  * @brief  Sets the destination address for the specified DMA.
+ * @brief  Sets the destination address for the specified DMA.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -319,20 +317,20 @@ void DMA_SetSrcAddress ( DMA_TypeDef* DMAx, uint32_t SrcAddress )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @param  DstAddress[in]: Destination address of data transmitted by DMAx.
-  * @retval Null.
-  */
-void DMA_SetDstAddress ( DMA_TypeDef* DMAx, uint32_t DstAddress )
+ * @param  DstAddress[in]: Destination address of data transmitted by DMAx.
+ * @retval Null.
+ */
+void DMA_SetDstAddress(DMA_TypeDef* DMAx, uint32_t DstAddress)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
     /* Write the number of data units to be transferred */
-    DMAx->DMA_DADR = ( uint32_t ) DstAddress;
+    DMAx->DMA_DADR = (uint32_t)DstAddress;
 }
 
 /**
-  * @brief  Sets the number of transfers for the specified DMA.
+ * @brief  Sets the number of transfers for the specified DMA.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -342,22 +340,22 @@ void DMA_SetDstAddress ( DMA_TypeDef* DMAx, uint32_t DstAddress )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @param  Counter[in]: Number of data units to be transferred (from 0 to 65535)
-  *          Number of data items depends only on the Peripheral data format.
-  *
-  * @retval Null.
-  */
-void DMA_SetCurrDataCounter ( DMA_TypeDef* DMAx, uint32_t Counter )
+ * @param  Counter[in]: Number of data units to be transferred (from 0 to 65535)
+ *          Number of data items depends only on the Peripheral data format.
+ *
+ * @retval Null.
+ */
+void DMA_SetCurrDataCounter(DMA_TypeDef* DMAx, uint32_t Counter)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
     /* Write the number of data units to be transferred */
-    DMAx->DMA_CNT = ( uint32_t ) Counter;
+    DMAx->DMA_CNT = (uint32_t)Counter;
 }
 
 /**
-  * @brief  Gets the number of transfers for the specified DMA.
+ * @brief  Gets the number of transfers for the specified DMA.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -367,19 +365,19 @@ void DMA_SetCurrDataCounter ( DMA_TypeDef* DMAx, uint32_t Counter )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @retval The number of DMA transfers.
-  */
-uint32_t DMA_GetCurrDataCounter ( DMA_TypeDef* DMAx )
+ * @retval The number of DMA transfers.
+ */
+uint32_t DMA_GetCurrDataCounter(DMA_TypeDef* DMAx)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
     /* Return The number of DMA transfers */
-    return ( ( uint32_t ) ( DMAx->DMA_CNT ) );
+    return ((uint32_t)(DMAx->DMA_CNT));
 }
 
 /**
-  * @brief  The software triggers the transfer of the specified DMA.
+ * @brief  The software triggers the transfer of the specified DMA.
  * @param  DMAx[out]:
  *                 SC32f10xx Selection range(DMA0 - DMA3)
  *                 SC32f11xx Selection range(DMA0 - DMA3)
@@ -389,19 +387,19 @@ uint32_t DMA_GetCurrDataCounter ( DMA_TypeDef* DMAx )
  *                  - DMA1 :select DMA1 peripherals
  *                  - DMA2 :select DMA2 peripherals
  *                  - DMA3 :select DMA3 peripherals
-  * @retval None
-  */
-void DMA_SoftwareTrigger ( DMA_TypeDef* DMAx )
+ * @retval None
+ */
+void DMA_SoftwareTrigger(DMA_TypeDef* DMAx)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
     /* Set DMA STS SWREQ Bit */
     DMAx->DMA_STS = DMA_STS_SWREQ;
 }
 /**
-  * @}
-  */
+ * @}
+ */
 /* End of DMA_Group2 ---------------------------------------------------------*/
 
 /** @defgroup DMA_Group3 Interrupts, DMA and flags management functions
@@ -416,191 +414,188 @@ void DMA_SoftwareTrigger ( DMA_TypeDef* DMAx )
   */
 
 /**
-  * @brief  Gets the transfer status of the specified DMA.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @retval Transfer status of DMA.
-  *              - DMA_State_IDLE:DMA idle state
-  *              - DMA_State_SOURCE:DMA write source address
-  *              - DMA_State_BUSY:DMA reads the source address data and writes to the destination address
-  *              - DMA_State_DESTINATION:DMA write destination address
-  *              - DMA_State_HANG:DMA Hang state
-  *              - DMA_State_PAUSE:DMA Pause state
-  *              - DMA_State_BURST:DMA Burst transmission
-  *              - DMA_State_STOP:DMA Stop state
-  */
-DMA_State_TypeDef DMA_GetStatus ( DMA_TypeDef* DMAx )
+ * @brief  Gets the transfer status of the specified DMA.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @retval Transfer status of DMA.
+ *              - DMA_State_IDLE:DMA idle state
+ *              - DMA_State_SOURCE:DMA write source address
+ *              - DMA_State_BUSY:DMA reads the source address data and writes to
+ * the destination address
+ *              - DMA_State_DESTINATION:DMA write destination address
+ *              - DMA_State_HANG:DMA Hang state
+ *              - DMA_State_PAUSE:DMA Pause state
+ *              - DMA_State_BURST:DMA Burst transmission
+ *              - DMA_State_STOP:DMA Stop state
+ */
+DMA_State_TypeDef DMA_GetStatus(DMA_TypeDef* DMAx)
 {
     DMA_State_TypeDef Status;
 
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
 
-    Status = ( DMA_State_TypeDef ) ( DMAx->DMA_STS & DMA_STS_STATUS );
+    Status = (DMA_State_TypeDef)(DMAx->DMA_STS & DMA_STS_STATUS);
     return Status;
 }
 
-
 /**
-  * @brief  Enables or disables the specified DMAy Streamx interrupts.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @param  DMA_IT[in]: specifies the DMA interrupt sources to be enabled or disabled.
-  *                  - DMA_IT_INTEN: DMA IT: INTEN
-  *                  - DMA_IT_TCIE: DMA IT: TCIE
-  *                  - DMA_IT_HTIE:DMA IT: HTIE
-  *                  - DMA_IT_TEIE:DMA IT: TEIE
-  * @param  NewState[in]: new state of the specified DMA interrupts.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void DMA_ITConfig ( DMA_TypeDef* DMAx, uint32_t DMA_IT, FunctionalState NewState )
+ * @brief  Enables or disables the specified DMAy Streamx interrupts.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @param  DMA_IT[in]: specifies the DMA interrupt sources to be enabled or
+ * disabled.
+ *                  - DMA_IT_INTEN: DMA IT: INTEN
+ *                  - DMA_IT_TCIE: DMA IT: TCIE
+ *                  - DMA_IT_HTIE:DMA IT: HTIE
+ *                  - DMA_IT_TEIE:DMA IT: TEIE
+ * @param  NewState[in]: new state of the specified DMA interrupts.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void DMA_ITConfig(DMA_TypeDef* DMAx, uint32_t DMA_IT, FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_DMA_IT ( DMA_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_DMA_IT(DMA_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the selected DMA transfer interrupts */
-        DMAx->DMA_CFG |= ( uint32_t ) ( DMA_IT );
+        DMAx->DMA_CFG |= (uint32_t)(DMA_IT);
     }
-    else
-    {
+    else {
         /* Disable the selected DMA transfer interrupts */
-        DMAx->DMA_CFG &= ~ ( uint32_t ) ( DMA_IT );
+        DMAx->DMA_CFG &= ~(uint32_t)(DMA_IT);
     }
 }
 
 /**
-  * @brief  Checks whether the specified DMAy Streamx flag is set or not.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @param  DMA_FLAG[in]: specifies the flag to check.
-	*                  - DMA_FLAG_GIF:Global interrupt flag
-	*                  - DMA_FLAG_TCIF:Transmission completion interrupt flag bit
-	*                  - DMA_FLAG_HTIF:Transmit half interrupt flag
-	*                  - DMA_FLAG_TEIF:Transmission error interrupt flag
-  * @retval The new state of DMA_FLAG (SET or RESET).
-  *                  -  RESET:Flag reset
-  *                  -  SET :Flag up
-  */
-FlagStatus DMA_GetFlagStatus ( DMA_TypeDef* DMAx, DMA_Flag_TypeDef DMA_FLAG )
+ * @brief  Checks whether the specified DMAy Streamx flag is set or not.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @param  DMA_FLAG[in]: specifies the flag to check.
+ *                  - DMA_FLAG_GIF:Global interrupt flag
+ *                  - DMA_FLAG_TCIF:Transmission completion interrupt flag bit
+ *                  - DMA_FLAG_HTIF:Transmit half interrupt flag
+ *                  - DMA_FLAG_TEIF:Transmission error interrupt flag
+ * @retval The new state of DMA_FLAG (SET or RESET).
+ *                  -  RESET:Flag reset
+ *                  -  SET :Flag up
+ */
+FlagStatus DMA_GetFlagStatus(DMA_TypeDef* DMAx, DMA_Flag_TypeDef DMA_FLAG)
 {
     FlagStatus bitstatus = RESET;
 
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_GET_DMA_FLAG ( DMA_FLAG ) );
-
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_GET_DMA_FLAG(DMA_FLAG));
 
     /* Check the status of the specified DMA flag */
-    if ( ( DMAx->DMA_STS & DMA_FLAG ) != ( uint32_t ) RESET )
-    {
+    if ((DMAx->DMA_STS & DMA_FLAG) != (uint32_t)RESET) {
         /* DMA_FLAG is set */
         bitstatus = SET;
     }
-    else
-    {
+    else {
         /* DMA_FLAG is reset */
         bitstatus = RESET;
     }
 
     /* Return the DMA_FLAG status */
-    return  bitstatus;
+    return bitstatus;
 }
 
 /**
-  * @brief  Clears the DMAy Streamx's pending flags.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @param  DMA_FLAG[in]: specifies the flag to clear.
-  *                  - DMA_FLAG_GIF : Global interrupt flag
-  *                  - DMA_FLAG_TCIF : Transmission completion interrupt flag bit
-  *                  - DMA_FLAG_HTIF : Transmit half interrupt flag
-  *                  - DMA_FLAG_TEIF : Transmission error interrupt flag
-  * @retval None
-  */
-void DMA_ClearFlag ( DMA_TypeDef* DMAx, uint32_t DMA_FLAG )
+ * @brief  Clears the DMAy Streamx's pending flags.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @param  DMA_FLAG[in]: specifies the flag to clear.
+ *                  - DMA_FLAG_GIF : Global interrupt flag
+ *                  - DMA_FLAG_TCIF : Transmission completion interrupt flag bit
+ *                  - DMA_FLAG_HTIF : Transmit half interrupt flag
+ *                  - DMA_FLAG_TEIF : Transmission error interrupt flag
+ * @retval None
+ */
+void DMA_ClearFlag(DMA_TypeDef* DMAx, uint32_t DMA_FLAG)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_GET_DMA_FLAG ( DMA_FLAG ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_GET_DMA_FLAG(DMA_FLAG));
 
     /* Set DMAy STS register clear flag bits */
-    DMAx->DMA_STS = ( uint32_t ) ( DMA_FLAG );
+    DMAx->DMA_STS = (uint32_t)(DMA_FLAG);
 }
 
 /**
-  * @brief  Enable or disable DMA Requests DMA.
-	* @param  DMAx[out]:
-  *                 SC32f10xx Selection range(DMA0 - DMA3)
-  *                 SC32f11xx Selection range(DMA0 - DMA3)
-  *                 SC32f12xx Selection range(DMA0 - DMA1)
-  *                 SC32f15xx Selection range(DMA0 - DMA3)
-	*                  - DMA0 :select DMA0 peripherals
-	*                  - DMA1 :select DMA1 peripherals
-	*                  - DMA2 :select DMA2 peripherals
-	*                  - DMA3 :select DMA3 peripherals
-  * @param DMA_DMARequest[in]: specifies the DMA interrupt sources to be enabled or disabled.
-  *                 - DMA_DMAReq_CHRQ:TIM overflow
-  * @param NewState[in]:  new state of the specified DMA interrupts.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void DMA_DMACmd ( DMA_TypeDef* DMAx, uint32_t DMA_DMARequest, FunctionalState NewState )
+ * @brief  Enable or disable DMA Requests DMA.
+ * @param  DMAx[out]:
+ *                 SC32f10xx Selection range(DMA0 - DMA3)
+ *                 SC32f11xx Selection range(DMA0 - DMA3)
+ *                 SC32f12xx Selection range(DMA0 - DMA1)
+ *                 SC32f15xx Selection range(DMA0 - DMA3)
+ *                  - DMA0 :select DMA0 peripherals
+ *                  - DMA1 :select DMA1 peripherals
+ *                  - DMA2 :select DMA2 peripherals
+ *                  - DMA3 :select DMA3 peripherals
+ * @param DMA_DMARequest[in]: specifies the DMA interrupt sources to be enabled
+ * or disabled.
+ *                 - DMA_DMAReq_CHRQ:TIM overflow
+ * @param NewState[in]:  new state of the specified DMA interrupts.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void DMA_DMACmd(DMA_TypeDef*    DMAx,
+                uint32_t        DMA_DMARequest,
+                FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_DMA_ALL_PERIPH ( DMAx ) );
-    assert_param ( IS_DMA_DMAREQ ( DMA_DMARequest ) );
+    assert_param(IS_DMA_ALL_PERIPH(DMAx));
+    assert_param(IS_DMA_DMAREQ(DMA_DMARequest));
 
     /* Config DMA Request */
-    if ( NewState != DISABLE )
-    {
+    if (NewState != DISABLE) {
         /* Enable the selected DMA Request */
-        DMAx->DMA_CFG |= ( uint32_t ) ( DMA_DMARequest );
+        DMAx->DMA_CFG |= (uint32_t)(DMA_DMARequest);
     }
-    else
-    {
+    else {
         /* Disable the selected DMA Request */
-        DMAx->DMA_CFG &= ( uint32_t ) ~ ( DMA_DMARequest );
+        DMAx->DMA_CFG &= (uint32_t)~(DMA_DMARequest);
     }
 }
 
 /**
-  * @}
-  */
+ * @}
+ */
 /* End of DMA_Group3 ---------------------------------------------------------*/
 
 /**

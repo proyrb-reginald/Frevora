@@ -26,7 +26,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sc32f1xxx_option.h"
 
-/** @defgroup OPTION_Group1 Configuration of the option computation unit functions
+/** @defgroup OPTION_Group1 Configuration of the option computation unit
+functions
  *  @brief   Configuration of the option computation unit functions
  *
 @verbatim
@@ -38,26 +39,23 @@
   */
 
 /**
-  * @brief  Enables or disables the WDT peripheral.
-  * @param  NewState[in]:  new state of the ADCx peripheral.
-  *                  - DISABLE:Function disable
-  *                  - ENABLE:Function enable
-  * @retval None
-  */
-void OPTION_WDTCmd ( FunctionalState NewState )
+ * @brief  Enables or disables the WDT peripheral.
+ * @param  NewState[in]:  new state of the ADCx peripheral.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
+ * @retval None
+ */
+void OPTION_WDTCmd(FunctionalState NewState)
 {
     OPT->OPINX = 0xC2;
 
-    if ( NewState == DISABLE )
-    {
+    if (NewState == DISABLE) {
         OPT->OPREG &= 0X7F;
     }
-    else
-    {
+    else {
         OPT->OPREG |= 0X80;
     }
 }
-
 
 /**
  * @brief  Configures the LVR voltage gear.
@@ -69,7 +67,7 @@ void OPTION_WDTCmd ( FunctionalState NewState )
  *            - OPTION_LVR_4_3V: LVR Reset: 4.3V
  * @retval None
  */
-void OPTION_LVRConfig ( OPTION_LVR_TypeDef OPTION_LVR )
+void OPTION_LVRConfig(OPTION_LVR_TypeDef OPTION_LVR)
 {
     OPT->OPINX = 0xC1;
 
@@ -80,30 +78,28 @@ void OPTION_LVRConfig ( OPTION_LVR_TypeDef OPTION_LVR )
 
 /**
  * @brief  Enables or disables the JTAG function.
-* @param  NewState[in]: new state of the ADCx peripheral.
-*                  - DISABLE:Function disable
-*                  - ENABLE:Function enable
+ * @param  NewState[in]: new state of the ADCx peripheral.
+ *                  - DISABLE:Function disable
+ *                  - ENABLE:Function enable
  * @retval None
  */
-void OPTION_JTAGCmd ( FunctionalState NewState )
+void OPTION_JTAGCmd(FunctionalState NewState)
 {
     OPT->OPINX = 0xC2;
-    if ( NewState == DISABLE )
-    {
+    if (NewState == DISABLE) {
         OPT->OPREG |= 0X40;
     }
-    else
-    {
+    else {
         OPT->OPREG &= 0XBF;
     }
 }
 
 /**
  * @brief  IAP protection locale A
-* @param  IAPPROAST[in]: The start sector of the IAP protection zone
-* @param  IAPPROAED[in]: The end-of-IAP protected sector
+ * @param  IAPPROAST[in]: The start sector of the IAP protection zone
+ * @param  IAPPROAED[in]: The end-of-IAP protected sector
  */
-void OPTION_IAPPORA ( uint16_t IAPPROAST, uint16_t IAPPROAED )
+void OPTION_IAPPORA(uint16_t IAPPROAST, uint16_t IAPPROAED)
 {
     OPT->OPINX = 0xC3;
 
@@ -112,7 +108,6 @@ void OPTION_IAPPORA ( uint16_t IAPPROAST, uint16_t IAPPROAED )
     OPT->OPINX = 0xC5;
 
     OPT->OPREG = IAPPROAED;
-
 }
 
 /**
@@ -121,7 +116,7 @@ void OPTION_IAPPORA ( uint16_t IAPPROAST, uint16_t IAPPROAED )
  * @param  IAPPROBED[in]: The end-of-IAP protected sector
  * @retval None
  */
-void OPTION_IAPPORB ( uint16_t IAPPROBST, uint16_t IAPPROBED )
+void OPTION_IAPPORB(uint16_t IAPPROBST, uint16_t IAPPROBED)
 {
     OPT->OPINX = 0xC7;
 
@@ -130,7 +125,6 @@ void OPTION_IAPPORB ( uint16_t IAPPROBST, uint16_t IAPPROBED )
     OPT->OPINX = 0xC9;
 
     OPT->OPREG = IAPPROBED;
-
 }
 
 /**
@@ -151,4 +145,3 @@ void OPTION_IAPPORB ( uint16_t IAPPROBST, uint16_t IAPPROBED )
  */
 
 /************************ (C) COPYRIGHT SOCicroelectronics *****END OF FILE****/
-

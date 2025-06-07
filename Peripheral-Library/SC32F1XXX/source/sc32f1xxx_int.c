@@ -41,66 +41,63 @@
  * @brief  DeInitializes the INT peripheral,
  * @retval None
  */
-void INT_DeInit ( void )
+void INT_DeInit(void)
 {
-    INT->INTF_IE  = ( uint16_t ) 0x00000000U;
-    INT->INTR_IE  = ( uint16_t ) 0x00000000U;
-    INT->INT_SEL0 = ( uint16_t ) 0x00000000U;
-    INT->INT_SEL1 = ( uint16_t ) 0x00000000U;
-    INT->INTF_CON = ( uint16_t ) 0x00000000U;
-    INT->INTR_CON = ( uint16_t ) 0x00000000U;
-    INT->INTF_STS = ( uint16_t ) 0x00000000U;
-    INT->INTR_STS = ( uint16_t ) 0x00000000U;
+    INT->INTF_IE  = (uint16_t)0x00000000U;
+    INT->INTR_IE  = (uint16_t)0x00000000U;
+    INT->INT_SEL0 = (uint16_t)0x00000000U;
+    INT->INT_SEL1 = (uint16_t)0x00000000U;
+    INT->INTF_CON = (uint16_t)0x00000000U;
+    INT->INTR_CON = (uint16_t)0x00000000U;
+    INT->INTF_STS = (uint16_t)0x00000000U;
+    INT->INTR_STS = (uint16_t)0x00000000U;
 }
 
 /**
-  * @brief  Initializes the INT peripheral according to the specified
-  *         parameters in the INT_InitStruct.
-  * @param  INT_InitStruct[out]: Pointer to structure INT_InitTypeDef, to be initialized.
-  * @retval None
-  */
-void INT_Init ( INT_InitTypeDef* INT_InitStruct )
+ * @brief  Initializes the INT peripheral according to the specified
+ *         parameters in the INT_InitStruct.
+ * @param  INT_InitStruct[out]: Pointer to structure INT_InitTypeDef, to be
+ * initialized.
+ * @retval None
+ */
+void INT_Init(INT_InitTypeDef* INT_InitStruct)
 {
     uint32_t tmppin, tmppos, tmpreg;
     /* Check the parameters */
-    assert_param ( IS_INT_CHANNEL ( INT_InitStruct->INT_Channel ) );
-    assert_param ( IS_INT_TRIGGER ( INT_InitStruct->INT_Trigger ) );
-    assert_param ( IS_INT_INTSEL ( INT_InitStruct->INT_INTSEL ) );
+    assert_param(IS_INT_CHANNEL(INT_InitStruct->INT_Channel));
+    assert_param(IS_INT_TRIGGER(INT_InitStruct->INT_Trigger));
+    assert_param(IS_INT_INTSEL(INT_InitStruct->INT_INTSEL));
 
-    if ( ( INT_InitStruct->INT_Trigger & INT_Trigger_Rising ) != INT_Trigger_Null )
-    {
+    if ((INT_InitStruct->INT_Trigger & INT_Trigger_Rising) !=
+        INT_Trigger_Null) {
         /* Set Rising edge configuration */
-        INT->INTR_CON |= ( uint32_t ) INT_InitStruct->INT_Channel;
+        INT->INTR_CON |= (uint32_t)INT_InitStruct->INT_Channel;
     }
-    else
-    {
+    else {
         /* Clear Rising edge configuration */
-        INT->INTR_CON &= ( uint32_t ) ( ~INT_InitStruct->INT_Channel );
+        INT->INTR_CON &= (uint32_t)(~INT_InitStruct->INT_Channel);
     }
 
-    if ( ( INT_InitStruct->INT_Trigger & INT_Trigger_Falling ) != INT_Trigger_Null )
-    {
+    if ((INT_InitStruct->INT_Trigger & INT_Trigger_Falling) !=
+        INT_Trigger_Null) {
         /* Set Falling edge configuration */
-        INT->INTF_CON |= ( uint32_t ) INT_InitStruct->INT_Channel;
+        INT->INTF_CON |= (uint32_t)INT_InitStruct->INT_Channel;
     }
-    else
-    {
+    else {
         /* Clear Falling edge configuration */
-        INT->INTF_CON &= ( uint32_t ) ( ~INT_InitStruct->INT_Channel );
+        INT->INTF_CON &= (uint32_t)(~INT_InitStruct->INT_Channel);
     }
 
     /* Get GPIOx PXLEV value */
     tmpreg = INT->INT_SEL0;
     /* Query the Pins that needs to be manipulated */
-    for ( tmppos = 0; tmppos < 8; tmppos++ )
-    {
-        tmppin = ( uint32_t ) ( 0x01 << tmppos );
-        if ( ( tmppin & INT_InitStruct->INT_Channel ) != RESET )
-        {
+    for (tmppos = 0; tmppos < 8; tmppos++) {
+        tmppin = (uint32_t)(0x01 << tmppos);
+        if ((tmppin & INT_InitStruct->INT_Channel) != RESET) {
             /* Clear the LEVx bits */
-            tmpreg &= ( uint32_t ) ~ ( 0x0F << ( tmppos * 4 ) );
+            tmpreg &= (uint32_t)~(0x0F << (tmppos * 4));
             /* Set LEVx bits according to Drive Level value */
-            tmpreg |= ( uint32_t ) ( INT_InitStruct->INT_INTSEL << ( tmppos * 4 ) );
+            tmpreg |= (uint32_t)(INT_InitStruct->INT_INTSEL << (tmppos * 4));
         }
     }
     /* Store GPIOx INT_SEL0 the new value */
@@ -109,21 +106,19 @@ void INT_Init ( INT_InitTypeDef* INT_InitStruct )
     /* Get GPIOx INT_SEL1 value */
     tmpreg = INT->INT_SEL1;
     /* Query the Pins that needs to be manipulated */
-    for ( ; tmppos < 16; tmppos++ )
-    {
-        tmppin = ( uint32_t ) ( 0x01 << tmppos );
-        if ( ( tmppin & INT_InitStruct->INT_Channel ) != RESET )
-        {
+    for (; tmppos < 16; tmppos++) {
+        tmppin = (uint32_t)(0x01 << tmppos);
+        if ((tmppin & INT_InitStruct->INT_Channel) != RESET) {
             /* Clear the INT_SEL1 bits */
-            tmpreg &= ( uint32_t ) ~ ( 0x0F << ( ( tmppos - 8 ) * 4 ) );
+            tmpreg &= (uint32_t)~(0x0F << ((tmppos - 8) * 4));
             /* Set INT_SEL1 bits according to Drive Level value */
-            tmpreg |= ( uint32_t ) ( INT_InitStruct->INT_INTSEL << ( ( tmppos - 8 ) * 4 ) );
+            tmpreg |=
+                (uint32_t)(INT_InitStruct->INT_INTSEL << ((tmppos - 8) * 4));
         }
     }
     /* Store GPIOx INT_SEL1 the new value */
     INT->INT_SEL1 = tmpreg;
 }
-
 
 /**
  * @brief  INT Trigger Mode Select
@@ -148,33 +143,30 @@ void INT_Init ( INT_InitTypeDef* INT_InitStruct )
  *                   - INT_Trigger_Null:INT Interrupt: Null
  *                   - INT_Trigger_Rising: Rising edge capture
  *                   - INT_Trigger_Falling: Falling edge capture
- *                   - INT_Trigger_Rising_Falling: Rising and Falling edge capture
+ *                   - INT_Trigger_Rising_Falling: Rising and Falling edge
+ * capture
  * @retval None
  */
-void INT_TriggerMode ( INT_Channel_Typedef INT_Channel, INT_Trigger_TypeDef Trigger_Mode )
+void INT_TriggerMode(INT_Channel_Typedef INT_Channel,
+                     INT_Trigger_TypeDef Trigger_Mode)
 {
-    if ( ( Trigger_Mode & INT_Trigger_Rising ) != INT_Trigger_Null )
-    {
+    if ((Trigger_Mode & INT_Trigger_Rising) != INT_Trigger_Null) {
         /* Set Rising edge configuration */
-        INT->INTR_CON |= ( uint32_t ) INT_Channel;
+        INT->INTR_CON |= (uint32_t)INT_Channel;
     }
-    else
-    {
+    else {
         /* Clear Rising edge configuration */
-        INT->INTR_CON &= ( uint32_t ) ( ~INT_Channel );
+        INT->INTR_CON &= (uint32_t)(~INT_Channel);
     }
 
-    if ( ( Trigger_Mode & INT_Trigger_Falling ) != INT_Trigger_Null )
-    {
+    if ((Trigger_Mode & INT_Trigger_Falling) != INT_Trigger_Null) {
         /* Set Falling edge configuration */
-        INT->INTF_CON |= ( uint32_t ) INT_Channel;
+        INT->INTF_CON |= (uint32_t)INT_Channel;
     }
-    else
-    {
+    else {
         /* Clear Falling edge configuration */
-        INT->INTF_CON &= ( uint32_t ) ( ~INT_Channel );
+        INT->INTF_CON &= (uint32_t)(~INT_Channel);
     }
-
 }
 /**
  * @}
@@ -215,42 +207,40 @@ void INT_TriggerMode ( INT_Channel_Typedef INT_Channel, INT_Trigger_TypeDef Trig
  *                   - INT_Trigger_Null:INT Interrupt: Null
  *                   - INT_Trigger_Rising:INT Interrupt: Rising edge capture
  *                   - INT_Trigger_Falling:INT Interrupt: Falling edge capture
- *                   - INT_Trigger_Rising_Falling:INT Interrupt: Rising and Falling edge capture
- * @param  NewState[in]: INT Indicates whether the interrupt is enabled or disabled.
+ *                   - INT_Trigger_Rising_Falling:INT Interrupt: Rising and
+ * Falling edge capture
+ * @param  NewState[in]: INT Indicates whether the interrupt is enabled or
+ * disabled.
  *                  - DISABLE:Function disable
  *                  - ENABLE:Function enable
  * @retval None
  */
-void INT_ITConfig ( uint16_t INT_Channel, uint16_t INT_IT, FunctionalState NewState )
+void INT_ITConfig(uint16_t        INT_Channel,
+                  uint16_t        INT_IT,
+                  FunctionalState NewState)
 {
     /* Check the parameters */
-    assert_param ( IS_INT_CHANNEL ( INT_Channel ) );
-    assert_param ( IS_INT_TRIGGER ( INT_IT ) );
-    assert_param ( IS_FUNCTIONAL_STATE ( NewState ) );
+    assert_param(IS_INT_CHANNEL(INT_Channel));
+    assert_param(IS_INT_TRIGGER(INT_IT));
+    assert_param(IS_FUNCTIONAL_STATE(NewState));
 
     /* Configure INTR_IE Register */
-    if ( INT_IT & INT_Trigger_Rising )
-    {
-        if ( NewState == ENABLE )
-        {
+    if (INT_IT & INT_Trigger_Rising) {
+        if (NewState == ENABLE) {
             INT->INTR_IE |= INT_Channel;
         }
-        else
-        {
-            INT->INTR_IE &= ( uint16_t ) ( ~INT_Channel );
+        else {
+            INT->INTR_IE &= (uint16_t)(~INT_Channel);
         }
     }
 
     /* Configure INTF_IE Register */
-    if ( INT_IT & INT_Trigger_Falling )
-    {
-        if ( NewState == ENABLE )
-        {
+    if (INT_IT & INT_Trigger_Falling) {
+        if (NewState == ENABLE) {
             INT->INTF_IE |= INT_Channel;
         }
-        else
-        {
-            INT->INTF_IE &= ( uint16_t ) ( ~INT_Channel );
+        else {
+            INT->INTF_IE &= (uint16_t)(~INT_Channel);
         }
     }
 }
@@ -281,33 +271,28 @@ void INT_ITConfig ( uint16_t INT_Channel, uint16_t INT_IT, FunctionalState NewSt
  *                  -  RESET:Flag reset
  *                  -  SET :Flag up
  */
-FlagStatus INT_GetFlagStatus ( INT_Channel_Typedef INT_Channel, INT_Flag_TypeDef INT_Flag )
+FlagStatus INT_GetFlagStatus(INT_Channel_Typedef INT_Channel,
+                             INT_Flag_TypeDef    INT_Flag)
 {
     FlagStatus bitstatus = RESET;
     /* Check the parameters */
-    assert_param ( IS_INT_CHANNEL ( INT_Channel ) );
-    assert_param ( IS_INT_FLAG ( INT_Flag ) );
+    assert_param(IS_INT_CHANNEL(INT_Channel));
+    assert_param(IS_INT_FLAG(INT_Flag));
 
     /* Get INTR_IE Register */
-    if ( INT_Flag & INT_Flag_Rising )
-    {
-        if ( ( INT->INTR_STS & INT_Channel ) != ( uint16_t ) RESET )
-        {
+    if (INT_Flag & INT_Flag_Rising) {
+        if ((INT->INTR_STS & INT_Channel) != (uint16_t)RESET) {
             bitstatus = SET;
         }
-        else
-        {
+        else {
             bitstatus = RESET;
         }
     }
-    else
-    {
-        if ( ( INT->INTF_STS & INT_Channel ) != ( uint16_t ) RESET )
-        {
+    else {
+        if ((INT->INTF_STS & INT_Channel) != (uint16_t)RESET) {
             bitstatus = SET;
         }
-        else
-        {
+        else {
             bitstatus = RESET;
         }
     }
@@ -338,14 +323,14 @@ FlagStatus INT_GetFlagStatus ( INT_Channel_Typedef INT_Channel, INT_Flag_TypeDef
  *
  * @retval None
  */
-void INT_ClearFlag ( uint32_t INT_Channel )
+void INT_ClearFlag(uint32_t INT_Channel)
 {
     /* Check the parameters */
-    assert_param ( IS_INT_CHANNEL ( INT_Channel ) );
+    assert_param(IS_INT_CHANNEL(INT_Channel));
 
     /* Clear INTR_STS and INTF_STS Register */
-    INT->INTR_STS &= ( uint16_t ) ( ~INT_Channel );
-    INT->INTF_STS &= ( uint16_t ) ( ~INT_Channel );
+    INT->INTR_STS &= (uint16_t)(~INT_Channel);
+    INT->INTF_STS &= (uint16_t)(~INT_Channel);
 }
 
 /**
@@ -365,4 +350,5 @@ void INT_ClearFlag ( uint32_t INT_Channel )
  * @}
  */
 
-/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT SOC Microelectronics *****END OF
+ * FILE****/
