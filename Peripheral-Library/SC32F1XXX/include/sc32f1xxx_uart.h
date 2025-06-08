@@ -288,7 +288,7 @@ typedef struct
 #if defined(SC32f11xx) || defined(SC32f12xx) || defined(SC32f15xx)
 #    define BIT(A, B) ((A >> B) & 0x01)
 #endif
-#ifdef PrintfEable
+#ifdef PrintfEnable
 #    define AvoidSemiHostEable 1
 #else
 #    define AvoidSemiHostEable 0
@@ -338,7 +338,7 @@ void    UART_LIN_LBDL(UART_TypeDef* UARTx, UART_LBDL_TypeDef LBDL);
 uint8_t LIN_CalID(uint8_t id);
 uint8_t LINCalChecksum(uint8_t id, uint8_t* data, uint8_t len);
 #endif
-#if defined(PrintfEable)
+#if defined(PrintfEnable)
 void Printf_UartInit(UART_TypeDef* UARTx);
 #    if defined(__ARMCC_VERSION) || defined(__ICCARM__)
 int fputc(int c, FILE* f);

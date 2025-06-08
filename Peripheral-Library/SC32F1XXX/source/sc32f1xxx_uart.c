@@ -749,7 +749,6 @@ __attribute__((weak)) int _write(int fd, char* pbuffer, int size)
 
     return size;
 }
-
 #endif
 
 /**

@@ -64,7 +64,7 @@
  * 0为最低优先级 */
 #define configMAX_PRIORITIES 8
 /* configMINIMAL_STACK_SIZE定义空闲任务使用的堆栈大小（以字为单位，非字节）*/
-#define configMINIMAL_STACK_SIZE 128
+#define configMINIMAL_STACK_SIZE 32
 /* configMAX_TASK_NAME_LEN设置任务名称最大长度（含NULL终止符） */
 #define configMAX_TASK_NAME_LEN 32
 /* 时间以"滴答"为单位计量 - 自RTOS启动以来的中断次数

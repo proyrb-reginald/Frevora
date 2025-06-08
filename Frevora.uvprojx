@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>SC32f12xx, Include_Main_H</Define>
+              <Define>SC32f12xx</Define>
               <Undefine></Undefine>
               <IncludePath>.\CMSIS\Include;.\CMSIS\Include\m-profile;.\Peripheral-Library\SC32F1XXX\include;.\Middleware\FreeRTOS\include;.\Middleware\FreeRTOS\portable\GCC\ARM_CM0;.\User</IncludePath>
             </VariousControls>
