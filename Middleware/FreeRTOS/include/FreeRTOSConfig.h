@@ -130,7 +130,7 @@
 /* 设置configSUPPORT_DYNAMIC_ALLOCATION为1启用动态内存分配API */
 #define configSUPPORT_DYNAMIC_ALLOCATION 1
 /* 设置heap_1/2/4.c使用的堆大小（字节） */
-#define configTOTAL_HEAP_SIZE (12 * 1024)
+#define configTOTAL_HEAP_SIZE (8 * 1024)
 /* 设置configAPPLICATION_ALLOCATED_HEAP为1由应用分配堆内存 */
 #define configAPPLICATION_ALLOCATED_HEAP 0
 /* 设置configSTACK_ALLOCATION_FROM_SEPARATE_HEAP为1从独立堆分配任务栈 */
@@ -157,7 +157,7 @@
 /* 设置configUSE_SB_COMPLETED_CALLBACK为1启用流缓冲区完成回调 */
 #define configUSE_SB_COMPLETED_CALLBACK 0
 /* 设置configCHECK_FOR_STACK_OVERFLOW为1/2启用栈溢出检测 */
-#define configCHECK_FOR_STACK_OVERFLOW 0
+#define configCHECK_FOR_STACK_OVERFLOW 1
 /******************************************************************************/
 /* 运行时统计相关定义 *******************************************************/
 /******************************************************************************/
@@ -258,14 +258,14 @@
 /* 设置以下configUSE_*为1包含对应功能 */
 #define configUSE_TASK_NOTIFICATIONS 1
 #define configUSE_MUTEXES 1
-#define configUSE_RECURSIVE_MUTEXES 1
-#define configUSE_COUNTING_SEMAPHORES 1
+#define configUSE_RECURSIVE_MUTEXES 0
+#define configUSE_COUNTING_SEMAPHORES 0
 #define configUSE_QUEUE_SETS 0
 #define configUSE_APPLICATION_TASK_TAG 0
 #define configUSE_POSIX_ERRNO 0
 /* 设置以下INCLUDE_*为1包含对应API */
-#define INCLUDE_vTaskPrioritySet 1
-#define INCLUDE_uxTaskPriorityGet 1
+#define INCLUDE_vTaskPrioritySet 0
+#define INCLUDE_uxTaskPriorityGet 0
 #define INCLUDE_vTaskDelete 1
 #define INCLUDE_vTaskSuspend 1
 #define INCLUDE_vTaskDelayUntil 1
@@ -277,7 +277,7 @@
 #define INCLUDE_eTaskGetState 0
 #define INCLUDE_xTimerPendFunctionCall 0
 #define INCLUDE_xTaskAbortDelay 0
-#define INCLUDE_xTaskGetHandle 1
+#define INCLUDE_xTaskGetHandle 0
 #define INCLUDE_xTaskResumeFromISR 1
 
 #define SysTick_Handler                                                        \
